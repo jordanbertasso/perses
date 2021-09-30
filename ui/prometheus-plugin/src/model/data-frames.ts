@@ -15,6 +15,12 @@ import { DataFrame, Series } from '@perses-ui/core';
 import { InstantQueryResponse, RangeQueryResponse } from './api-types';
 import { parseValueTuple } from './parse-sample-values';
 
+export const labelsToSeriesName = (labels: { [key: string]: string }): string =>
+  `${labels.__name__ || ''}{${Object.keys(labels)
+    .filter((l) => l !== '__name__')
+    .map((l) => `${l}="${labels[l]}"`)
+    .join(',')}}`;
+
 export function createDataFrames(
   response?: InstantQueryResponse | RangeQueryResponse
 ): DataFrame[] {
@@ -31,7 +37,7 @@ export function createDataFrames(
     valueColumn.values.push(sampleValue);
 
     // TODO: Name data frames?
-    const dataFrame = createDataFrame('', timeColumn, valueColumn);
+    const dataFrame = createDataFrame('scalar', timeColumn, valueColumn);
     return [dataFrame];
   }
 
@@ -50,7 +56,13 @@ export function createDataFrames(
     }
 
     // TODO: Name data frames?
-    dataFrames.push(createDataFrame('', timeColumn, valueColumn));
+    dataFrames.push(
+      createDataFrame(
+        labelsToSeriesName(series.metric),
+        timeColumn,
+        valueColumn
+      )
+    );
   }
 
   return dataFrames;

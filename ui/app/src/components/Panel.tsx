@@ -25,7 +25,8 @@ import { PluginBoundary, usePanelComponent } from '../context/plugin-registry';
 import { PanelContextProvider } from '../context/PanelContextProvider';
 import AlertErrorFallback from './AlertErrorFallback';
 
-const CONTENT_HEIGHT = 152;
+// const CONTENT_HEIGHT = 152;
+const CONTENT_HEIGHT = 300;
 
 export interface PanelProps extends CardProps {
   definition: AnyPanelDefinition;
