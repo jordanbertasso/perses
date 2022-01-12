@@ -14,7 +14,13 @@
 import * as echarts from 'echarts/core';
 import type { EChartsOption } from 'echarts';
 import { LineChart as EChartsLineChart } from 'echarts/charts';
-import { DatasetComponent, GridComponent, TooltipComponent } from 'echarts/components';
+import {
+  DatasetComponent,
+  DataZoomComponent,
+  GridComponent,
+  ToolboxComponent,
+  TooltipComponent,
+} from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { useEffect, useMemo, useState, useLayoutEffect, useRef } from 'react';
 import { Box } from '@mui/material';
@@ -25,7 +31,15 @@ import { getCommonTimeScale } from './utils/data-transform';
 import { getNearbySeries } from './utils/focused-series';
 import Tooltip from './tooltip/Tooltip';
 
-echarts.use([EChartsLineChart, DatasetComponent, GridComponent, TooltipComponent, CanvasRenderer]);
+echarts.use([
+  EChartsLineChart,
+  DatasetComponent,
+  DataZoomComponent,
+  GridComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  CanvasRenderer,
+]);
 
 // TODO (sjcobb): move to chart theme, share with GaugeChart
 const noDataOption = {
@@ -123,6 +137,21 @@ function LineChart(props: LineChartProps) {
       tooltip: {
         show: false,
       },
+      toolbox: {
+        show: true,
+        itemSize: 0,
+        // itemSize: 5,
+        feature: {
+          // https://stackoverflow.com/questions/57183297/is-there-a-way-to-use-zoom-of-type-select-without-showing-the-toolbar/67684076#67684076
+          dataZoom: {
+            show: true,
+            icon: {
+              zoom: 'image://',
+            },
+            // icon: null,
+          },
+        },
+      },
     };
 
     return {
@@ -159,6 +188,13 @@ function LineChart(props: LineChartProps) {
 
     chart.setOption(option);
     console.timeEnd('echarts render time (dataset)');
+
+    // TODO (sjcobb): undo dataZoom on double click
+    chart.dispatchAction({
+      type: 'takeGlobalCursor',
+      key: 'dataZoomSelect',
+      dataZoomSelectActive: true,
+    });
   }, [chart, option]);
 
   // Populate tooltip data from getZr cursor coordinates
