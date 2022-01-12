@@ -14,7 +14,7 @@
 import * as echarts from 'echarts/core';
 import type { EChartsOption } from 'echarts';
 import { LineChart as EChartsLineChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent } from 'echarts/components';
+import { DatasetComponent, GridComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { useEffect, useMemo, useState, useLayoutEffect, useRef } from 'react';
 import { Box } from '@mui/material';
@@ -25,7 +25,7 @@ import { getCommonTimeScale } from './utils/data-transform';
 import { getNearbySeries } from './utils/focused-series';
 import Tooltip from './tooltip/Tooltip';
 
-echarts.use([EChartsLineChart, GridComponent, TooltipComponent, CanvasRenderer]);
+echarts.use([EChartsLineChart, DatasetComponent, GridComponent, TooltipComponent, CanvasRenderer]);
 
 // TODO (sjcobb): move to chart theme, share with GaugeChart
 const noDataOption = {
@@ -68,6 +68,7 @@ function LineChart(props: LineChartProps) {
       return { option: { series: undefined }, timeScale: undefined };
     }
 
+    const dataset: EChartsOption['dataset'] = [];
     const series: EChartsOption['series'] = [];
 
     for (const query of queries) {
@@ -75,10 +76,17 @@ function LineChart(props: LineChartProps) {
       if (query.loading || query.data === undefined) continue;
 
       for (const dataSeries of query.data.series) {
+        const id = dataset.length;
+        dataset.push({
+          id,
+          source: [['timestamp', 'value'], ...dataSeries.values],
+        });
+
         series.push({
           type: 'line',
           name: dataSeries.name,
-          data: [...dataSeries.values],
+          datasetId: id,
+          // data: [...dataSeries.values],
           color: getRandomColor(dataSeries.name),
           symbol: 'none',
           lineStyle: { width: 1.5 },
@@ -94,6 +102,7 @@ function LineChart(props: LineChartProps) {
       title: {
         show: false,
       },
+      dataset,
       series,
       xAxis: {
         type: 'time',
@@ -145,9 +154,11 @@ function LineChart(props: LineChartProps) {
       chart.showLoading();
     } else {
       chart.hideLoading();
+      console.time('echarts render time (dataset)');
     }
 
     chart.setOption(option);
+    console.timeEnd('echarts render time (dataset)');
   }, [chart, option]);
 
   // Populate tooltip data from getZr cursor coordinates
