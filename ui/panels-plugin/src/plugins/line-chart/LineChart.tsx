@@ -81,7 +81,8 @@ function LineChart(props: LineChartProps) {
           name: dataSeries.name,
           data: [...dataSeries.values],
           color: getRandomColor(dataSeries.name),
-          symbol: 'none',
+          // symbol: 'none',
+          // // showAllSymbol: true,
           lineStyle: { width: 1.5 },
           emphasis: { lineStyle: { width: 2 } },
           sampling: 'lttb', // use Largest-Triangle-Three-Bucket algorithm to filter points
@@ -202,6 +203,11 @@ function LineChart(props: LineChartProps) {
       }
       lastPosX = params.offsetX;
       lastPosY = params.offsetY;
+    });
+
+    chart.on('click', 'series.line', (params) => {
+      console.log('click series.line -> params: ', params);
+      // TODO (sjcobb): use context for series drilldown
     });
 
     return () => {

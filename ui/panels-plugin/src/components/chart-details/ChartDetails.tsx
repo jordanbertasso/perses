@@ -22,6 +22,7 @@ import { Box, Typography } from '@mui/material';
 import { CalculationsMap, CalculationType } from '../../model/calculations';
 import { formatValue, UnitOptions } from '../../model/units';
 import { convertThresholds, defaultThresholdInput, ThresholdOptions } from '../../model/thresholds';
+import { useSeriesDrilldown } from '../../context/SeriesDrilldown';
 
 echarts.use([EChartsGaugeChart, GridComponent, DatasetComponent, TitleComponent, TooltipComponent, CanvasRenderer]);
 
@@ -76,6 +77,9 @@ function ChartDetails(props: ChartDetailsProps) {
   const { query, width, height, calculation, unit } = props;
   const thresholds = props.thresholds ?? defaultThresholdInput;
   const { data } = useGraphQuery(query);
+
+  const seriesDrilldown = useSeriesDrilldown();
+  console.log('seriesDrilldown: ', seriesDrilldown);
 
   const option: EChartsOption = useMemo(() => {
     // TODO (sjcobb): add loading spinner, share noDataOption with other charts
@@ -258,7 +262,6 @@ function ChartDetails(props: ChartDetailsProps) {
   }, [chart, width, height]);
 
   const formattedQuery = query.options.query;
-  console.log(formattedQuery);
 
   const chartDetailsActive = true ?? null;
   if (chartDetailsActive) {
