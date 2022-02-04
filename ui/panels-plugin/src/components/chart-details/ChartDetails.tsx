@@ -19,10 +19,13 @@ import { GridComponent, DatasetComponent, TitleComponent, TooltipComponent } fro
 import { CanvasRenderer } from 'echarts/renderers';
 import { useMemo, useState, useLayoutEffect, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
-import { CalculationsMap, CalculationType } from '../../model/calculations';
-import { formatValue, UnitOptions } from '../../model/units';
-import { convertThresholds, defaultThresholdInput, ThresholdOptions } from '../../model/thresholds';
-import { useSeriesDrilldown } from '../../context/SeriesDrilldown';
+// import { CalculationsMap, CalculationType } from '../../model/calculations';
+import { CalculationType } from '../../model/calculations';
+// import { formatValue, UnitOptions } from '../../model/units';
+import { UnitOptions } from '../../model/units';
+// import { convertThresholds, defaultThresholdInput, ThresholdOptions } from '../../model/thresholds';
+import { ThresholdOptions } from '../../model/thresholds';
+// import { useSeriesDrilldown } from '../../context/SeriesDrilldown';
 
 echarts.use([EChartsGaugeChart, GridComponent, DatasetComponent, TitleComponent, TooltipComponent, CanvasRenderer]);
 
@@ -53,174 +56,109 @@ interface ChartDetailsProps {
   showSparkline?: boolean;
 }
 
-const noDataOption = {
-  title: {
-    show: true,
-    textStyle: {
-      color: 'grey',
-      fontSize: 20,
-    },
-    text: 'No data',
-    left: 'center',
-    top: 'center',
-  },
-  xAxis: {
-    show: false,
-  },
-  yAxis: {
-    show: false,
-  },
-  series: [],
-};
+// const noDataOption = {
+//   title: {
+//     show: true,
+//     textStyle: {
+//       color: 'grey',
+//       fontSize: 20,
+//     },
+//     text: 'No data',
+//     left: 'center',
+//     top: 'center',
+//   },
+//   xAxis: {
+//     show: false,
+//   },
+//   yAxis: {
+//     show: false,
+//   },
+//   series: [],
+// };
 
 function ChartDetails(props: ChartDetailsProps) {
-  const { query, width, height, calculation, unit } = props;
-  const thresholds = props.thresholds ?? defaultThresholdInput;
-  const { data } = useGraphQuery(query);
+  console.log('ChartDetails -> props: ', props);
+  // const { query, width, height } = props;
+  const { width, height } = props;
+  // const { query, width, height, calculation, unit } = props;
+  // const thresholds = props.thresholds ?? defaultThresholdInput;
+  // const { data } = useGraphQuery(query);
 
-  const seriesDrilldown = useSeriesDrilldown();
-  console.log('seriesDrilldown: ', seriesDrilldown);
+  // const seriesDrilldown = useSeriesDrilldown();
+  // console.log('seriesDrilldown: ', seriesDrilldown);
+
+  // // const { seriesData } = seriesDrilldown.seriesData;
+  // // console.log('seriesData: ', seriesDrilldown);
 
   const option: EChartsOption = useMemo(() => {
     // TODO (sjcobb): add loading spinner, share noDataOption with other charts
-    if (data === undefined) return {};
+    // if (data === undefined) return {};
 
-    const series = Array.from(data.series)[0];
-    if (series === undefined) return noDataOption;
+    const seriesData = [
+      [1637293410, '0.49933333333333396'],
+      [1637293440, '0.5007501250208362'],
+      [1637293470, '0.4989002199560097'],
+      [1637293500, '0.49943321997732937'],
+      [1637293530, '0.4999000199960008'],
+      [1637293560, '0.4996833227774263'],
+      [1637293590, '0.5003166561114626'],
+    ];
 
-    const calculate = CalculationsMap[calculation];
-    const calculatedValue = calculate(Array.from(series.values)) ?? 0;
+    // const series = Array.from(data.series)[0];
+    // if (series === undefined) return noDataOption;
 
-    const axisLineColors = convertThresholds(thresholds);
+    // const calculate = CalculationsMap[calculation];
+    // const calculatedValue = calculate(Array.from(series.values)) ?? 0;
+
+    // const axisLineColors = convertThresholds(thresholds);
 
     return {
-      title: {
-        show: false,
-      },
       tooltip: {
-        show: false,
+        show: true,
+        trigger: 'axis',
       },
+      // toolbox: {
+      //   feature: {
+      //     dataZoom: {
+      //       yAxisIndex: 'none',
+      //     },
+      //     restore: {},
+      //     saveAsImage: {},
+      //   }
+      // },
+      xAxis: {
+        type: 'time',
+        boundaryGap: false,
+      },
+      yAxis: {
+        type: 'value',
+        boundaryGap: [0, '100%'],
+      },
+      // dataZoom: [
+      //   {
+      //     type: 'inside',
+      //     start: 0,
+      //     end: 20,
+      //   },
+      //   {
+      //     start: 0,
+      //     end: 20,
+      //   },
+      // ],
       series: [
         {
-          type: 'gauge',
-          center: ['50%', '65%'],
-          radius: '100%',
-          startAngle: 200,
-          endAngle: -20,
-          min: 0,
-          max: 100,
-          splitNumber: 12,
-          silent: true,
-          progress: {
-            show: true,
-            width: 22,
-            itemStyle: {
-              color: 'auto',
-            },
-          },
-          pointer: {
-            show: false,
-          },
-          axisLine: {
-            lineStyle: {
-              color: [[1, '#e1e5e9']], // TODO (sjcobb): use future chart theme colors
-              width: 22,
-            },
-          },
-          axisTick: {
-            show: false,
-            distance: -28,
-            splitNumber: 5,
-            lineStyle: {
-              width: 2,
-              color: '#999',
-            },
-          },
-          splitLine: {
-            show: false,
-            distance: -32,
-            length: 6,
-            lineStyle: {
-              width: 2,
-              color: '#999',
-            },
-          },
-          axisLabel: {
-            show: false,
-            distance: -18,
-            color: '#999',
-            fontSize: 12,
-          },
-          anchor: {
-            show: false,
-          },
-          title: {
-            show: false,
-          },
-          detail: {
-            show: false,
-          },
-          data: [
-            {
-              value: calculatedValue,
-            },
-          ],
-        },
-        {
-          type: 'gauge',
-          center: ['50%', '65%'],
-          radius: '114%',
-          startAngle: 200,
-          endAngle: -20,
-          min: 0,
-          max: 100,
-          pointer: {
-            show: false,
-            itemStyle: {
-              color: 'auto',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              width: 5,
-              color: axisLineColors,
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-          splitLine: {
-            show: false,
-          },
-          axisLabel: {
-            show: false,
-          },
-          detail: {
-            show: true,
-            valueAnimation: false,
-            width: '60%',
-            borderRadius: 8,
-            offsetCenter: [0, '-9%'],
-            fontSize: 20,
-            fontWeight: 'bolder',
-            color: 'inherit',
-            formatter: (value: number) => {
-              return formatValue(value, {
-                kind: unit.kind,
-                decimal_places: 0,
-              });
-            },
-          },
-          data: [
-            {
-              value: calculatedValue,
-            },
-          ],
+          name: '',
+          type: 'line',
+          // smooth: true,
+          // symbol: 'none',
+          // areaStyle: {},
+          data: seriesData,
         },
       ],
     };
-  }, [data, calculation, unit, thresholds]);
+  }, []);
+  // }, [data, seriesData]);
+  // }, [data, calculation, thresholds, seriesData]);
 
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   const [chart, setChart] = useState<echarts.ECharts | undefined>(undefined);
@@ -240,10 +178,10 @@ function ChartDetails(props: ChartDetailsProps) {
 
   // Sync options with chart instance
   useLayoutEffect(() => {
-    // Can't set options if no chart yet
     if (chart === undefined) return;
 
     chart.setOption(option);
+    console.log('option: ', option);
   }, [chart, option]);
 
   // Resize the chart to match as width/height changes
@@ -261,14 +199,35 @@ function ChartDetails(props: ChartDetailsProps) {
     prevSize.current = { width, height };
   }, [chart, width, height]);
 
-  const formattedQuery = query.options.query;
+  // const formattedQuery = query.options.query;
 
-  const chartDetailsActive = true ?? null;
-  if (chartDetailsActive) {
-    return (
+  // const chartDetailsActive = true ?? null;
+  // if (chartDetailsActive) {
+  //   return (
+  //     <Box
+  //       sx={{
+  //         display: 'inline-block',
+  //         width: width,
+  //         // height: 150,
+  //         padding: '0 10px 10px 10px',
+  //         background: '#D3D3D3', // ltgray
+  //       }}
+  //     >
+  //       <Typography variant="h5" sx={{ fontWeight: 700 }}>
+  //         Chart Details
+  //       </Typography>
+  //       <Typography variant="body2">Query: {formattedQuery}</Typography>
+  //     </Box>
+  //   );
+  // }
+
+  // return <Box ref={setContainerRef} sx={{ width, height }} />;
+  return (
+    <>
       <Box
         sx={{
-          display: 'inline-block',
+          // display: 'inline-block',
+          display: 'none',
           width: width,
           // height: 150,
           padding: '0 10px 10px 10px',
@@ -278,11 +237,11 @@ function ChartDetails(props: ChartDetailsProps) {
         <Typography variant="h5" sx={{ fontWeight: 700 }}>
           Chart Details
         </Typography>
-        <Typography variant="body2">Query: {formattedQuery}</Typography>
+        {/* <Typography variant="body2">Query: {formattedQuery}</Typography> */}
       </Box>
-    );
-  }
-  return <Box ref={setContainerRef} sx={{ width, height }} />;
+      <Box ref={setContainerRef} sx={{ width, height }} />;
+    </>
+  );
 }
 
 export default ChartDetails;
