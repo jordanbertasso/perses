@@ -18,10 +18,10 @@ import { GaugeChart as EChartsGaugeChart } from 'echarts/charts';
 import { GridComponent, DatasetComponent, TitleComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { useMemo, useState, useLayoutEffect, useRef } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { CalculationsMap, CalculationType } from '../../model/calculations';
 import { formatValue, UnitOptions } from '../../model/units';
-import { convertThresholds, defaultThresholdInput, ThresholdOptions } from './thresholds';
+import { convertThresholds, defaultThresholdInput, ThresholdOptions } from '../../model/thresholds';
 
 echarts.use([EChartsGaugeChart, GridComponent, DatasetComponent, TitleComponent, TooltipComponent, CanvasRenderer]);
 
@@ -257,6 +257,28 @@ function ChartDetails(props: ChartDetailsProps) {
     prevSize.current = { width, height };
   }, [chart, width, height]);
 
+  const formattedQuery = query.options.query;
+  console.log(formattedQuery);
+
+  const chartDetailsActive = true ?? null;
+  if (chartDetailsActive) {
+    return (
+      <Box
+        sx={{
+          display: 'inline-block',
+          width: width,
+          // height: 150,
+          padding: '0 10px 10px 10px',
+          background: '#D3D3D3', // ltgray
+        }}
+      >
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          Chart Details
+        </Typography>
+        <Typography variant="body2">Query: {formattedQuery}</Typography>
+      </Box>
+    );
+  }
   return <Box ref={setContainerRef} sx={{ width, height }} />;
 }
 

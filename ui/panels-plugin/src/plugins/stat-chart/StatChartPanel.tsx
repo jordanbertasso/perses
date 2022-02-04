@@ -78,6 +78,8 @@ export function StatChartPanel(props: StatChartPanelProps) {
       <ChartDetails
         width={contentDimensions.width}
         height={contentDimensions.height / 2}
+        query={query}
+        calculation={calculation}
         data={chartData}
         unit={unit}
         thresholds={thresholds}
