@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// TODO (sjcobb): how to click line, save active series data to context, show in ChartDetails echarts canvas?
+
 import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import type { EChartsOption } from 'echarts';

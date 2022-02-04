@@ -323,40 +323,40 @@ const benchmarkDashboard: DashboardResource = {
           //   height: 6,
           //   content: { $ref: '#/panels/seriesTest' },
           // },
-          // {
-          //   x: 12,
-          //   y: 0,
-          //   width: 12,
-          //   height: 6,
-          //   content: { $ref: '#/panels/basicEx' },
-          // },
-        ],
-      },
-      {
-        kind: 'Grid',
-        display: {
-          title: 'Row 2',
-          collapse: {
-            open: true,
-          },
-        },
-        items: [
-          {
-            x: 0,
-            y: 0,
-            width: 12,
-            height: 6,
-            content: { $ref: '#/panels/seriesTestAlt' },
-          },
           {
             x: 12,
             y: 0,
             width: 12,
             height: 6,
-            content: { $ref: '#/panels/multiQueries' },
+            content: { $ref: '#/panels/basicEx' },
           },
         ],
       },
+      // {
+      //   kind: 'Grid',
+      //   display: {
+      //     title: 'Row 2',
+      //     collapse: {
+      //       open: true,
+      //     },
+      //   },
+      //   items: [
+      //     {
+      //       x: 0,
+      //       y: 0,
+      //       width: 12,
+      //       height: 6,
+      //       content: { $ref: '#/panels/seriesTestAlt' },
+      //     },
+      //     {
+      //       x: 12,
+      //       y: 0,
+      //       width: 12,
+      //       height: 6,
+      //       content: { $ref: '#/panels/multiQueries' },
+      //     },
+      //   ],
+      // },
       {
         kind: 'Grid',
         display: {
@@ -366,34 +366,34 @@ const benchmarkDashboard: DashboardResource = {
           },
         },
         items: [
-          {
-            x: 0,
-            y: 0,
-            width: 2,
-            height: 2,
-            content: { $ref: '#/panels/statSm' },
-          },
-          {
-            x: 0,
-            y: 2,
-            width: 2,
-            height: 2,
-            content: { $ref: '#/panels/statRAM' },
-          },
-          {
-            x: 0,
-            y: 4,
-            width: 2,
-            height: 2,
-            content: { $ref: '#/panels/statTotalRAM' },
-          },
-          {
-            x: 2,
-            y: 0,
-            width: 4,
-            height: 6,
-            content: { $ref: '#/panels/statMd' },
-          },
+          // {
+          //   x: 0,
+          //   y: 0,
+          //   width: 2,
+          //   height: 2,
+          //   content: { $ref: '#/panels/statSm' },
+          // },
+          // {
+          //   x: 0,
+          //   y: 2,
+          //   width: 2,
+          //   height: 2,
+          //   content: { $ref: '#/panels/statRAM' },
+          // },
+          // {
+          //   x: 0,
+          //   y: 4,
+          //   width: 2,
+          //   height: 2,
+          //   content: { $ref: '#/panels/statTotalRAM' },
+          // },
+          // {
+          //   x: 2,
+          //   y: 0,
+          //   width: 4,
+          //   height: 6,
+          //   content: { $ref: '#/panels/statMd' },
+          // },
           {
             x: 6,
             y: 0,
@@ -401,13 +401,13 @@ const benchmarkDashboard: DashboardResource = {
             height: 6,
             content: { $ref: '#/panels/statLg' },
           },
-          {
-            x: 16,
-            y: 0,
-            width: 8,
-            height: 6,
-            content: { $ref: '#/panels/gaugeEx' },
-          },
+          // {
+          //   x: 16,
+          //   y: 0,
+          //   width: 8,
+          //   height: 6,
+          //   content: { $ref: '#/panels/gaugeEx' },
+          // },
         ],
       },
     ],
