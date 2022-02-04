@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AnyGraphQueryDefinition, GraphSeries, useGraphQuery } from '@perses-ui/core';
+import { AnyGraphQueryDefinition, GraphSeries } from '@perses-ui/core';
 import * as echarts from 'echarts/core';
 import type { EChartsOption } from 'echarts';
 import { GaugeChart as EChartsGaugeChart } from 'echarts/charts';
@@ -19,13 +19,7 @@ import { GridComponent, DatasetComponent, TitleComponent, TooltipComponent } fro
 import { CanvasRenderer } from 'echarts/renderers';
 import { useMemo, useState, useLayoutEffect, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
-// import { CalculationsMap, CalculationType } from '../../model/calculations';
 import { CalculationType } from '../../model/calculations';
-// import { formatValue, UnitOptions } from '../../model/units';
-import { UnitOptions } from '../../model/units';
-// import { convertThresholds, defaultThresholdInput, ThresholdOptions } from '../../model/thresholds';
-import { ThresholdOptions } from '../../model/thresholds';
-// import { useSeriesDrilldown } from '../../context/SeriesDrilldown';
 
 echarts.use([EChartsGaugeChart, GridComponent, DatasetComponent, TitleComponent, TooltipComponent, CanvasRenderer]);
 
@@ -50,10 +44,10 @@ interface ChartDetailsProps {
   height: number;
   query: AnyGraphQueryDefinition;
   calculation: CalculationType;
-  data: ChartDetailsData;
-  unit: UnitOptions;
-  thresholds?: ThresholdOptions;
-  showSparkline?: boolean;
+  // data: ChartDetailsData;
+  // unit: UnitOptions;
+  // thresholds?: ThresholdOptions;
+  // showSparkline?: boolean;
 }
 
 // const noDataOption = {
@@ -239,7 +233,7 @@ function ChartDetails(props: ChartDetailsProps) {
         </Typography>
         {/* <Typography variant="body2">Query: {formattedQuery}</Typography> */}
       </Box>
-      <Box ref={setContainerRef} sx={{ width, height }} />;
+      <Box ref={setContainerRef} sx={{ width, height }} />
     </>
   );
 }
