@@ -11,38 +11,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO (sjcobb): how to click line, save active series data to context, show in ChartDetails echarts canvas?
-
-import { useMemo } from 'react';
-import { useTheme } from '@mui/material';
+import { AnyGraphQueryDefinition, GraphSeries, useGraphQuery } from '@perses-ui/core';
+import * as echarts from 'echarts/core';
 import type { EChartsOption } from 'echarts';
-import { use } from 'echarts/core';
-import { GaugeChart as EChartsGaugeChart, GaugeSeriesOption } from 'echarts/charts';
-import { LineChart as EChartsLineChart, LineSeriesOption } from 'echarts/charts';
+import { GaugeChart as EChartsGaugeChart } from 'echarts/charts';
 import { GridComponent, DatasetComponent, TitleComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import { GraphSeries } from '@perses-ui/core';
-import { formatValue, UnitOptions } from '../../model/units'; // TODO (sjcobb): add back formatValue
-import { defaultThresholdInput, ThresholdOptions } from '../../model/thresholds';
-import { EChartsWrapper } from '../../components/echarts-wrapper/EChartsWrapper';
+import { useMemo, useState, useLayoutEffect, useRef } from 'react';
+import { Box } from '@mui/material';
+import { CalculationsMap, CalculationType } from '../../model/calculations';
+import { formatValue, UnitOptions } from '../../model/units';
+import { convertThresholds, defaultThresholdInput, ThresholdOptions } from './thresholds';
 
-use([
-  EChartsGaugeChart,
-  EChartsLineChart,
-  GridComponent,
-  DatasetComponent,
-  TitleComponent,
-  TooltipComponent,
-  CanvasRenderer,
-]);
+echarts.use([EChartsGaugeChart, GridComponent, DatasetComponent, TitleComponent, TooltipComponent, CanvasRenderer]);
+
+// export interface ChartDetailsProps {
+//   query: AnyGraphQueryDefinition;
+//   width: number;
+//   height: number;
+//   calculation: CalculationType;
+//   unit: UnitOptions;
+//   thresholds?: ThresholdOptions;
+// }
+
+export interface ChartDetailsData {
+  calculatedValue: number | null | undefined;
+  seriesData: GraphSeries | null | undefined;
+  name?: string;
+  showName?: boolean;
+}
+
+interface ChartDetailsProps {
+  width: number;
+  height: number;
+  query: AnyGraphQueryDefinition;
+  calculation: CalculationType;
+  data: ChartDetailsData;
+  unit: UnitOptions;
+  thresholds?: ThresholdOptions;
+  showSparkline?: boolean;
+}
 
 const noDataOption = {
   title: {
     show: true,
     textStyle: {
       color: 'grey',
-      fontSize: 16,
-      fontWeight: 400,
+      fontSize: 20,
     },
     text: 'No data',
     left: 'center',
@@ -57,180 +72,192 @@ const noDataOption = {
   series: [],
 };
 
-export interface ChartDetailsData {
-  calculatedValue: number | null | undefined;
-  seriesData: GraphSeries | null | undefined;
-  name?: string;
-  showName?: boolean;
-}
-
-interface ChartDetailsProps {
-  width: number;
-  height: number;
-  data: ChartDetailsData;
-  unit: UnitOptions;
-  thresholds?: ThresholdOptions;
-  showSparkline?: boolean;
-}
-
 function ChartDetails(props: ChartDetailsProps) {
-  const { width, height, data, unit, showSparkline } = props;
+  const { query, width, height, calculation, unit } = props;
   const thresholds = props.thresholds ?? defaultThresholdInput;
-  const theme = useTheme();
-
-  // TODO (sjcobb): improve sparkline color override, theme integration
-  let backgroundColor = 'transparent';
-  if (thresholds.default_color) {
-    backgroundColor = thresholds.default_color;
-  } else if (showSparkline === true) {
-    backgroundColor = theme.palette.primary.light;
-  }
+  const { data } = useGraphQuery(query);
 
   const option: EChartsOption = useMemo(() => {
-    if (data.seriesData === undefined) return {};
-    if (data.seriesData === null || data.calculatedValue === undefined) return noDataOption;
+    // TODO (sjcobb): add loading spinner, share noDataOption with other charts
+    if (data === undefined) return {};
 
-    const name = data.showName === true ? data.name : '';
-    const showName = data.showName ?? true;
-    const series = data.seriesData;
-    const calculatedValue = data.calculatedValue ?? 0;
-    const isLargePanel = width > 250 ? true : false;
-    const nameFontSize = isLargePanel === true ? 30 : 12;
+    const series = Array.from(data.series)[0];
+    if (series === undefined) return noDataOption;
 
-    const statSeries: Array<GaugeSeriesOption | LineSeriesOption> = [
-      {
-        type: 'gauge',
-        data: [
-          {
-            value: calculatedValue,
-            name: name,
-          },
-        ],
-        detail: {
-          show: true,
-          offsetCenter: ['0%', showSparkline === true ? '-55%' : '-15%'],
-          formatter: [`{name|${name}}`, `{value|${formatValue(calculatedValue, unit)}}`].join('\n'),
-          rich: {
-            name: {
-              padding: showName === true ? [0, 0, 5, 0] : 0,
-              fontSize: nameFontSize,
-              lineHeight: nameFontSize,
-            },
-            value: {},
-          },
-        },
-        center: ['50%', '60%'],
-        animation: false,
-        silent: true,
-        title: { show: false },
-        progress: { show: false },
-        pointer: { show: false },
-        axisLine: { show: false },
-        axisTick: { show: false },
-        splitLine: { show: false },
-        axisLabel: { show: false },
-        anchor: { show: false },
-        zlevel: 2,
-      },
-    ];
+    const calculate = CalculationsMap[calculation];
+    const calculatedValue = calculate(Array.from(series.values)) ?? 0;
 
-    if (showSparkline === true) {
-      const lineSeries: LineSeriesOption = {
-        type: 'line',
-        data: [...series.values],
-        zlevel: 1,
-        symbol: 'none',
-        animation: false,
-        lineStyle: {
-          color: '#FFFFFF',
-          opacity: 0.6,
-        },
-        areaStyle: {
-          color: '#FFFFFF',
-          opacity: 0.3,
-        },
-        silent: true,
-      };
-      statSeries.push(lineSeries);
-    }
+    const axisLineColors = convertThresholds(thresholds);
 
-    const option = {
+    return {
       title: {
         show: false,
-      },
-      grid: [
-        {
-          show: true,
-          backgroundColor: backgroundColor,
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          containLabel: false,
-          borderWidth: 0,
-        },
-        {
-          show: false,
-          top: '45%', // adds space above sparkline
-          right: 0,
-          bottom: 0,
-          left: 0,
-          containLabel: false,
-        },
-      ],
-      xAxis: {
-        type: 'time',
-        show: false,
-        boundaryGap: false,
-        gridIndex: 1, // sparkline grid
-      },
-      yAxis: {
-        type: 'value',
-        show: false,
-        gridIndex: 1,
       },
       tooltip: {
         show: false,
       },
-      series: statSeries,
-      textStyle: {
-        color: backgroundColor === 'transparent' ? '#000000' : '#FFFFFF',
-        fontSize: 18,
-        lineHeight: 18,
-        fontFamily: '"Lato", sans-serif',
-      },
-      media: [
+      series: [
         {
-          query: {
-            maxWidth: 180,
-          },
-          option: {
-            textStyle: {
-              fontSize: 12,
-              lineHeight: 12,
+          type: 'gauge',
+          center: ['50%', '65%'],
+          radius: '100%',
+          startAngle: 200,
+          endAngle: -20,
+          min: 0,
+          max: 100,
+          splitNumber: 12,
+          silent: true,
+          progress: {
+            show: true,
+            width: 22,
+            itemStyle: {
+              color: 'auto',
             },
           },
+          pointer: {
+            show: false,
+          },
+          axisLine: {
+            lineStyle: {
+              color: [[1, '#e1e5e9']], // TODO (sjcobb): use future chart theme colors
+              width: 22,
+            },
+          },
+          axisTick: {
+            show: false,
+            distance: -28,
+            splitNumber: 5,
+            lineStyle: {
+              width: 2,
+              color: '#999',
+            },
+          },
+          splitLine: {
+            show: false,
+            distance: -32,
+            length: 6,
+            lineStyle: {
+              width: 2,
+              color: '#999',
+            },
+          },
+          axisLabel: {
+            show: false,
+            distance: -18,
+            color: '#999',
+            fontSize: 12,
+          },
+          anchor: {
+            show: false,
+          },
+          title: {
+            show: false,
+          },
+          detail: {
+            show: false,
+          },
+          data: [
+            {
+              value: calculatedValue,
+            },
+          ],
+        },
+        {
+          type: 'gauge',
+          center: ['50%', '65%'],
+          radius: '114%',
+          startAngle: 200,
+          endAngle: -20,
+          min: 0,
+          max: 100,
+          pointer: {
+            show: false,
+            itemStyle: {
+              color: 'auto',
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              width: 5,
+              color: axisLineColors,
+            },
+          },
+          axisTick: {
+            show: false,
+          },
+          splitLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: false,
+          },
+          detail: {
+            show: true,
+            valueAnimation: false,
+            width: '60%',
+            borderRadius: 8,
+            offsetCenter: [0, '-9%'],
+            fontSize: 20,
+            fontWeight: 'bolder',
+            color: 'inherit',
+            formatter: (value: number) => {
+              return formatValue(value, {
+                kind: unit.kind,
+                decimal_places: 0,
+              });
+            },
+          },
+          data: [
+            {
+              value: calculatedValue,
+            },
+          ],
         },
       ],
     };
+  }, [data, calculation, unit, thresholds]);
 
-    return option;
-  }, [data, unit, width, showSparkline, backgroundColor]);
+  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+  const [chart, setChart] = useState<echarts.ECharts | undefined>(undefined);
 
-  const chartDetailsActive = true ?? null;
-  if (chartDetailsActive) {
-    return <p>CHART DETAILS</p>;
-  }
+  // Create a chart instance in the container
+  useLayoutEffect(() => {
+    if (containerRef === null) return;
 
-  return (
-    <EChartsWrapper
-      sx={{
-        width: width,
-        height: height,
-      }}
-      option={option}
-    />
-  );
+    // TODO (sjcobb): add echarts wrapper, common way to init echarts
+    const chart = echarts.init(containerRef);
+    setChart(chart);
+
+    return () => {
+      chart.dispose();
+    };
+  }, [containerRef]);
+
+  // Sync options with chart instance
+  useLayoutEffect(() => {
+    // Can't set options if no chart yet
+    if (chart === undefined) return;
+
+    chart.setOption(option);
+  }, [chart, option]);
+
+  // Resize the chart to match as width/height changes
+  const prevSize = useRef({ width, height });
+  useLayoutEffect(() => {
+    // No need to resize initially
+    if (prevSize.current.width === width && prevSize.current.height === height) {
+      return;
+    }
+
+    // Can't resize if no chart yet
+    if (chart === undefined) return;
+
+    chart.resize({ width, height });
+    prevSize.current = { width, height };
+  }, [chart, width, height]);
+
+  return <Box ref={setContainerRef} sx={{ width, height }} />;
 }
 
 export default ChartDetails;
