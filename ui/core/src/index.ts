@@ -30,3 +30,4 @@ export * from './model/time';
 export * from './model/variables';
 export * from './model/http';
 export * from './utils/fetch';
+export * from './styles';

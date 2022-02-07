@@ -22,7 +22,6 @@ import { blueGrey } from '@mui/material/colors';
  * Creates the Perses MUI theme.
  */
 export function createTheme() {
-  console.log('CREATE THEME...');
   return createMuiTheme({
     palette: {
       background: {

@@ -71,7 +71,7 @@ interface ChartDetailsProps {
 // };
 
 function ChartDetails(props: ChartDetailsProps) {
-  console.log('ChartDetails -> props: ', props);
+  // console.log('ChartDetails -> props: ', props);
   // const { query, width, height } = props;
   const { width, height } = props;
   // const { query, width, height, calculation, unit } = props;
@@ -175,7 +175,7 @@ function ChartDetails(props: ChartDetailsProps) {
     if (chart === undefined) return;
 
     chart.setOption(option);
-    console.log('option: ', option);
+    // console.log('option: ', option);
   }, [chart, option]);
 
   // Resize the chart to match as width/height changes
