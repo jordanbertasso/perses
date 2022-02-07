@@ -1,4 +1,5 @@
-export default {
+// export default {
+export const EChartsDarkTheme = {
   color: [
     '#dd6b66',
     '#759aa0',

@@ -12,12 +12,14 @@
 // limitations under the License.
 
 import { useMemo } from 'react';
+import { useTheme } from '@mui/material';
 import type { EChartsOption } from 'echarts';
 import { use } from 'echarts/core';
 import { GaugeChart as EChartsGaugeChart } from 'echarts/charts';
 import { GridComponent, TitleComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import { JsonObject } from '@perses-ui/core';
+// import { JsonObject } from '@perses-ui/core';
+import { JsonObject, EChartsDarkTheme } from '@perses-ui/core';
 import { formatValue, UnitOptions } from '../../model/units';
 import { convertThresholds, defaultThresholdInput, ThresholdOptions } from '../../model/thresholds';
 import { EChartsWrapper } from '../../components/echarts-wrapper/EChartsWrapper';
@@ -58,6 +60,8 @@ interface GaugeChartProps extends JsonObject {
 export function GaugeChart(props: GaugeChartProps) {
   const { width, height, data, unit } = props;
   const thresholds = props.thresholds ?? defaultThresholdInput;
+  const theme = useTheme();
+  console.log('theme: ', theme);
 
   const option: EChartsOption = useMemo(() => {
     if (data === null || data === undefined) return noDataOption;
@@ -200,6 +204,7 @@ export function GaugeChart(props: GaugeChartProps) {
         height: height,
       }}
       option={option}
+      theme={EChartsDarkTheme}
     />
   );
 }

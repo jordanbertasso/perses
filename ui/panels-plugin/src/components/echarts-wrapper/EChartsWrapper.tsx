@@ -24,7 +24,8 @@ export type onEventsType = Record<string, onEventFunction>;
 export interface EChartsWrapper {
   sx: SxProps<Theme>;
   option: EChartsCoreOption;
-  theme?: string;
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  theme?: string | any;
   onChartReady?: (instance: ECharts) => void;
   onEvents?: onEventsType;
 }
