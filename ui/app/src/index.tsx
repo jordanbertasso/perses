@@ -16,8 +16,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { enableMapSet } from 'immer';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { getDarkTheme } from '../../core/src/styles/dark';
 import App from './App';
-import { createTheme } from './styles/theme';
+// import { createTheme } from './styles/theme';
 import { SnackbarProvider } from './context/SnackbarProvider';
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } });
@@ -26,7 +27,8 @@ function renderApp() {
   ReactDOM.render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={createTheme()}>
+        {/* <ThemeProvider theme={createTheme()}> */}
+        <ThemeProvider theme={getDarkTheme()}>
           <SnackbarProvider anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
             <CssBaseline />
             <App />
