@@ -16,7 +16,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { enableMapSet } from 'immer';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { getDarkTheme } from '../../core/src/styles/dark';
+import { getDarkTheme } from '@perses-ui/core';
 import App from './App';
 // import { createTheme } from './styles/theme';
 import { SnackbarProvider } from './context/SnackbarProvider';

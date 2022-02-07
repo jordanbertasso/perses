@@ -26,7 +26,29 @@ declare module '@mui/material/styles' {
     pageSection?: Partial<Palette['pageSection']>;
     defaultV4?: Palette['defaultV4'];
   }
+
+  interface Theme {
+    chart: {
+      backgroundColor: string;
+    };
+  }
+
+  interface ThemeOptions {
+    chart?: {
+      backgroundColor?: string;
+    };
+  }
 }
+
+// declare module '@mui/material/styles' {
+//   interface Chart {
+//     backgroundColor: string;
+//   }
+
+//   interface ChartOptions {
+//     backgroundColor: '#FFFFFF';
+//   }
+// }
 
 declare module '@mui/material/styles/createMixins' {
   interface Mixins {
