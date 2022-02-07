@@ -1,3 +1,5 @@
+import type { ThemeOption as EChartsThemeOption } from 'echarts';
+
 // Allows extending Lab types/components also
 import type {} from '@mui/lab/themeAugmentation';
 
@@ -34,9 +36,10 @@ declare module '@mui/material/styles' {
   }
 
   interface ThemeOptions {
-    chart?: {
-      backgroundColor?: string;
-    };
+    // chart?: {
+    chart?: EChartsThemeOption;
+    //   backgroundColor?: string;
+    // };
   }
 }
 

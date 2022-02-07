@@ -78,14 +78,14 @@ export function getTheme(overrides: ThemeOptions = {}) {
     },
   };
 
-  const chart: ThemeOptions['chart'] = {
-    backgroundColor: '#6a0dad', // purple
-  };
+  // const chart: ThemeOptions['chart'] = {
+  //   backgroundColor: '#6a0dad', // purple
+  // };
 
   const theme = createTheme({
     palette: merge(palette, overrides.palette),
 
-    chart: chart,
+    chart: overrides.chart,
 
     typography: {
       fontFamily: '"Lato", sans-serif',

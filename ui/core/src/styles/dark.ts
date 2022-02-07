@@ -1,13 +1,15 @@
-import { alpha, ThemeOptions } from '@mui/material';
+import { alpha } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { getTheme } from './common';
 import { BespokeColors, BespokeGreys } from './bespoke-colors';
+import { EChartsDarkTheme } from './echarts/theme-echarts-dark';
 
-const chart: ThemeOptions['chart'] = {
-  backgroundColor: '#6a0dad', // purple
-};
+// const chart: ThemeOptions['chart'] = {
+//   backgroundColor: '#6a0dad', // purple
+// };
 
 export const getDarkTheme = () => {
+  console.log('getDarkTheme...');
   return getTheme({
     palette: {
       mode: 'dark',
@@ -98,6 +100,7 @@ export const getDarkTheme = () => {
       },
     },
 
-    chart: chart,
+    // chart: chart,
+    chart: EChartsDarkTheme,
   });
 };
