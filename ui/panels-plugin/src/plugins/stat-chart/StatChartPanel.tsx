@@ -25,7 +25,7 @@ import { CalculationsMap, CalculationType } from '../../model/calculations';
 import { UnitOptions } from '../../model/units';
 import { ThresholdOptions, defaultThresholdInput } from '../../model/thresholds';
 import { StatChartData, StatChart } from '../../components/stat-chart/StatChart';
-import ChartDetails from '../../components/chart-details/ChartDetails';
+// import ChartDetails from '../../components/chart-details/ChartDetails';
 
 export const StatChartKind = 'StatChart' as const;
 
@@ -73,18 +73,29 @@ export function StatChartPanel(props: StatChartPanelProps) {
     );
   }
 
+  // return (
+  //   <>
+  //     <ChartDetails width={620} height={300} query={query} calculation={calculation} />
+  //     <StatChart
+  //       width={contentDimensions.width}
+  //       height={contentDimensions.height / 2}
+  //       data={chartData}
+  //       unit={unit}
+  //       thresholds={thresholds}
+  //       showSparkline={showSparkline}
+  //     />
+  //   </>
+  // );
+
   return (
-    <>
-      <ChartDetails width={620} height={300} query={query} calculation={calculation} />
-      <StatChart
-        width={contentDimensions.width}
-        height={contentDimensions.height / 2}
-        data={chartData}
-        unit={unit}
-        thresholds={thresholds}
-        showSparkline={showSparkline}
-      />
-    </>
+    <StatChart
+      width={contentDimensions.width}
+      height={contentDimensions.height}
+      data={chartData}
+      unit={unit}
+      thresholds={thresholds}
+      showSparkline={showSparkline}
+    />
   );
 }
 
