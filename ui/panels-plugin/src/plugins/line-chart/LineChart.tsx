@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { useTheme } from '@mui/material';
 import * as echarts from 'echarts/core';
 import type { EChartsOption } from 'echarts';
 import { LineChart as EChartsLineChart } from 'echarts/charts';
@@ -61,6 +62,10 @@ function LineChart(props: LineChartProps) {
   const { width, height } = props;
   const queries = useRunningGraphQueries();
   const [tooltipData, setTooltipData] = useState<TooltipData>(emptyTooltipData);
+
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const theme: any = useTheme();
+  // const chartTheme = theme.chart ?? {};
 
   // Calculate the LineChart options based on the query results
   const { option, timeScale } = useMemo(() => {
@@ -131,13 +136,13 @@ function LineChart(props: LineChartProps) {
   useLayoutEffect(() => {
     if (containerRef === null) return;
 
-    const chart = echarts.init(containerRef);
+    const chart = echarts.init(containerRef, theme.chart);
     setChart(chart);
 
     return () => {
       chart.dispose();
     };
-  }, [containerRef]);
+  }, [containerRef, theme]);
 
   // Sync options with chart instance
   useLayoutEffect(() => {
