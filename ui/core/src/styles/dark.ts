@@ -1,7 +1,11 @@
-import { alpha } from '@mui/material';
+import { alpha, ThemeOptions } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { getTheme } from './common';
 import { BespokeColors, BespokeGreys } from './bespoke-colors';
+
+const chart: ThemeOptions['chart'] = {
+  backgroundColor: '#6a0dad', // purple
+};
 
 export const getDarkTheme = () => {
   return getTheme({
@@ -93,5 +97,7 @@ export const getDarkTheme = () => {
         },
       },
     },
+
+    chart: chart,
   });
 };

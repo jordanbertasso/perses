@@ -12,8 +12,8 @@
 // limitations under the License.
 
 import { useState } from 'react';
-import { Card, CardProps, CardHeader, CardContent, Typography } from '@mui/material';
-import { AnyPanelDefinition } from '@perses-ui/core';
+import { Card, CardProps, CardHeader, CardContent, ThemeProvider, Typography } from '@mui/material';
+import { AnyPanelDefinition, getDarkTheme } from '@perses-ui/core';
 import { PluginBoundary, usePanelComponent } from '../../context/plugin-registry';
 import AlertErrorFallback from '../../components/AlertErrorFallback';
 import { PanelContextProvider } from './PanelContextProvider';
@@ -32,60 +32,62 @@ function Panel(props: PanelProps) {
   const showPanelHeader = definition.display.show_panel_header ?? true;
   const loadingText = showPanelHeader === true ? 'Loading...' : '';
   return (
-    <Card
-      sx={{
-        ...others.sx,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexFlow: 'column nowrap',
-        overflow: 'visible',
-      }}
-      variant="outlined"
-      {...others}
-    >
-      {showPanelHeader === true && (
-        <CardHeader
-          title={
-            <Typography
-              component="h2"
-              variant="body2"
-              fontWeight={(theme) => theme.typography.fontWeightBold}
-              whiteSpace="nowrap"
-              overflow="hidden"
-              textOverflow="ellipsis"
-            >
-              {definition.display.name}
-            </Typography>
-          }
-          sx={{
-            display: 'block',
-            padding: (theme) => theme.spacing(1, 2),
-          }}
-        />
-      )}
-      <CardContent
+    <ThemeProvider theme={getDarkTheme()}>
+      <Card
         sx={{
-          position: 'relative',
-          flexGrow: 1,
-          padding: (theme) => theme.spacing(1, 2),
-          // Override MUI default style for last-child
-          ':last-child': {
-            padding: (theme) => {
-              return showPanelHeader === true ? theme.spacing(1, 2) : '0';
-            },
-          },
+          ...others.sx,
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexFlow: 'column nowrap',
+          overflow: 'visible',
         }}
-        ref={setContentElement}
+        variant="outlined"
+        {...others}
       >
-        {/* Actually render plugin with PanelContent component so we can wrap with a loading/error boundary */}
-        <PanelContextProvider contentElement={contentElement}>
-          <PluginBoundary loadingFallback={loadingText} ErrorFallbackComponent={AlertErrorFallback}>
-            <PanelContent definition={definition} />
-          </PluginBoundary>
-        </PanelContextProvider>
-      </CardContent>
-    </Card>
+        {showPanelHeader === true && (
+          <CardHeader
+            title={
+              <Typography
+                component="h2"
+                variant="body2"
+                fontWeight={(theme) => theme.typography.fontWeightBold}
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+              >
+                {definition.display.name}
+              </Typography>
+            }
+            sx={{
+              display: 'block',
+              padding: (theme) => theme.spacing(1, 2),
+            }}
+          />
+        )}
+        <CardContent
+          sx={{
+            position: 'relative',
+            flexGrow: 1,
+            padding: (theme) => theme.spacing(1, 2),
+            // Override MUI default style for last-child
+            ':last-child': {
+              padding: (theme) => {
+                return showPanelHeader === true ? theme.spacing(1, 2) : '0';
+              },
+            },
+          }}
+          ref={setContentElement}
+        >
+          {/* Actually render plugin with PanelContent component so we can wrap with a loading/error boundary */}
+          <PanelContextProvider contentElement={contentElement}>
+            <PluginBoundary loadingFallback={loadingText} ErrorFallbackComponent={AlertErrorFallback}>
+              <PanelContent definition={definition} />
+            </PluginBoundary>
+          </PanelContextProvider>
+        </CardContent>
+      </Card>
+    </ThemeProvider>
   );
 }
 
