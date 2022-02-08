@@ -16,21 +16,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { enableMapSet } from 'immer';
 import { QueryClient, QueryClientProvider } from 'react-query';
-// import { getDarkTheme } from '@perses-ui/core';
-import { getLightTheme } from '@perses-ui/core';
+import { getDarkTheme, getLightTheme } from '@perses-ui/core';
 import App from './App';
-// import { createTheme } from './styles/theme';
 import { SnackbarProvider } from './context/SnackbarProvider';
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } });
+const isDarkModeEnabled = true;
 
 function renderApp() {
+  console.log('renderApp...');
   ReactDOM.render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        {/* <ThemeProvider theme={createTheme()}> */}
-        {/* <ThemeProvider theme={getDarkTheme()}> */}
-        <ThemeProvider theme={getLightTheme()}>
+        <ThemeProvider theme={isDarkModeEnabled ? getDarkTheme() : getLightTheme()}>
           <SnackbarProvider anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
             <CssBaseline />
             <App />

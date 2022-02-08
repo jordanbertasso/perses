@@ -13,8 +13,7 @@
 
 import { useState } from 'react';
 import { Card, CardProps, CardHeader, CardContent, ThemeProvider, Typography } from '@mui/material';
-// import { AnyPanelDefinition, getDarkTheme } from '@perses-ui/core';
-import { AnyPanelDefinition, getLightTheme } from '@perses-ui/core';
+import { AnyPanelDefinition, getDarkTheme, getLightTheme } from '@perses-ui/core';
 import { PluginBoundary, usePanelComponent } from '../../context/plugin-registry';
 import AlertErrorFallback from '../../components/AlertErrorFallback';
 import { PanelContextProvider } from './PanelContextProvider';
@@ -32,8 +31,9 @@ function Panel(props: PanelProps) {
   const [contentElement, setContentElement] = useState<HTMLDivElement | null>(null);
   const showPanelHeader = definition.display.show_panel_header ?? true;
   const loadingText = showPanelHeader === true ? 'Loading...' : '';
+  const isDarkModeEnabled = true;
   return (
-    <ThemeProvider theme={getLightTheme()}>
+    <ThemeProvider theme={isDarkModeEnabled ? getDarkTheme() : getLightTheme()}>
       <Card
         sx={{
           ...others.sx,
