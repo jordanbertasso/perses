@@ -1,5 +1,6 @@
 import { BespokeColors } from './bespoke-colors';
 import { getTheme } from './common';
+import { EChartsWaldenTheme } from './echarts/theme-echarts-walden';
 
 /**
  * Need to reinstantiate the theme everytime to support switching between light and dark themes
@@ -18,5 +19,6 @@ export const getLightTheme = () => {
       MuiButton: {},
       MuiLink: {},
     },
+    chart: EChartsWaldenTheme,
   });
 };

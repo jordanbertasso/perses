@@ -16,7 +16,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { enableMapSet } from 'immer';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { getDarkTheme } from '@perses-ui/core';
+// import { getDarkTheme } from '@perses-ui/core';
+import { getLightTheme } from '@perses-ui/core';
 import App from './App';
 // import { createTheme } from './styles/theme';
 import { SnackbarProvider } from './context/SnackbarProvider';
@@ -28,7 +29,8 @@ function renderApp() {
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         {/* <ThemeProvider theme={createTheme()}> */}
-        <ThemeProvider theme={getDarkTheme()}>
+        {/* <ThemeProvider theme={getDarkTheme()}> */}
+        <ThemeProvider theme={getLightTheme()}>
           <SnackbarProvider anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
             <CssBaseline />
             <App />

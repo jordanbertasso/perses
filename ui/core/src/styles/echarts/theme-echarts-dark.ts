@@ -1,4 +1,4 @@
-// export default {
+// https://echarts.apache.org/en/theme-builder.html
 export const EChartsDarkTheme = {
   color: [
     '#dd6b66',

@@ -3,6 +3,7 @@ import '@fontsource/lato/400.css';
 import '@fontsource/lato/700.css';
 import '@fontsource/lato/900.css';
 import { createTheme, ThemeOptions, alpha } from '@mui/material';
+import { blueGrey } from '@mui/material/colors';
 import merge from 'lodash/merge';
 import { BespokeGreys } from './bespoke-colors';
 
@@ -19,19 +20,23 @@ export const ROOT_ID = 'root';
  */
 export function getTheme(overrides: ThemeOptions = {}) {
   const palette: ThemeOptions['palette'] = {
-    primary: {
-      main: '#1ED998',
-      dark: '#0D8359',
-      light: '#D1F5D8',
-    },
+    // primary: {
+    //   main: '#1ED998',
+    //   dark: '#0D8359',
+    //   light: '#D1F5D8',
+    // },
 
-    secondary: {
-      main: BespokeGreys.SANTAS_GRAY,
-    },
+    // secondary: {
+    //   main: BespokeGreys.SANTAS_GRAY,
+    // },
+
+    // background: {
+    //   default: '#f0f2f5',
+    //   paper: '#FFFFFF', // ...
+    // },
 
     background: {
-      default: '#f0f2f5',
-      paper: '#FFFFFF',
+      default: blueGrey[50],
     },
 
     common: {
@@ -39,16 +44,16 @@ export function getTheme(overrides: ThemeOptions = {}) {
       black: '#000000',
     },
 
-    text: {
-      secondary: BespokeGreys.SANTAS_GRAY,
-    },
+    // text: {
+    //   secondary: BespokeGreys.SANTAS_GRAY,
+    // },
 
-    action: {
-      disabledBackground: alpha(BespokeGreys.SANTAS_GRAY, 0.5),
-      disabled: alpha(BespokeGreys.COMET, 0.6),
-      hover: alpha(BespokeGreys.SANTAS_GRAY, 0.2),
-      selected: alpha(BespokeGreys.SANTAS_GRAY, 0.35),
-    },
+    // action: {
+    //   disabledBackground: alpha(BespokeGreys.SANTAS_GRAY, 0.5),
+    //   disabled: alpha(BespokeGreys.COMET, 0.6),
+    //   hover: alpha(BespokeGreys.SANTAS_GRAY, 0.2),
+    //   selected: alpha(BespokeGreys.SANTAS_GRAY, 0.35),
+    // },
   };
 
   const chart: ThemeOptions['chart'] = {};
