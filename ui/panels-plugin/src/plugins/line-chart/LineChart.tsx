@@ -86,8 +86,7 @@ function LineChart(props: LineChartProps) {
           name: dataSeries.name,
           data: [...dataSeries.values],
           color: getRandomColor(dataSeries.name),
-          // symbol: 'none',
-          // // showAllSymbol: true,
+          symbol: 'none',
           lineStyle: { width: 1.5 },
           emphasis: { lineStyle: { width: 2 } },
           sampling: 'lttb', // use Largest-Triangle-Three-Bucket algorithm to filter points
