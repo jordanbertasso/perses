@@ -51,10 +51,12 @@ export function getTheme(overrides: ThemeOptions = {}) {
     },
   };
 
+  const chart: ThemeOptions['chart'] = {};
+
   const theme = createTheme({
     palette: merge(palette, overrides.palette),
 
-    chart: overrides.chart,
+    chart: merge(chart, overrides.chart),
 
     typography: {
       fontFamily: '"Lato", sans-serif',
