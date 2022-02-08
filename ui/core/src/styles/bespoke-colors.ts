@@ -6,7 +6,6 @@
 export const BespokeColors = {
   MEDIUM_BLUE: '#0011DE',
   BLACK_PEARL: '#151920',
-  PURPLE_MOUNTAIN_MAJESTY: '#B580BD',
 } as const;
 
 /**
@@ -16,6 +15,4 @@ export const BespokeGreys = {
   EBONY_CLAY: '#2A2E3E',
   COMET: '#676B7D',
   SANTAS_GRAY: '#A1A6B9',
-  SOLITUDE: '#E3E4EA',
-  PORCELAIN: '#F7F8F9',
 } as const;

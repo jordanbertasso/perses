@@ -1,4 +1,4 @@
-import { BespokeColors, BespokeGreys } from './bespoke-colors';
+import { BespokeColors } from './bespoke-colors';
 import { getTheme } from './common';
 
 /**
@@ -15,25 +15,8 @@ export const getLightTheme = () => {
           },
         },
       },
-      MuiButton: {
-        styleOverrides: {
-          containedSecondary: {
-            color: BespokeGreys.EBONY_CLAY,
-            backgroundColor: BespokeGreys.SOLITUDE,
-            borderBottomColor: BespokeGreys.EBONY_CLAY,
-            '&:hover': {
-              color: '#FFFFFF',
-            },
-          },
-        },
-      },
-      MuiLink: {
-        styleOverrides: {
-          root: {
-            color: BespokeColors.MEDIUM_BLUE,
-          },
-        },
-      },
+      MuiButton: {},
+      MuiLink: {},
     },
   });
 };
