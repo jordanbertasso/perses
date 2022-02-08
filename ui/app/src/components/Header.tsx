@@ -19,6 +19,7 @@ import {
   Divider,
   Menu,
   MenuItem,
+  switchClasses,
   Switch,
   Theme,
   Toolbar,
@@ -26,9 +27,11 @@ import {
 } from '@mui/material';
 import { ChevronDown } from 'mdi-material-ui';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
+// import { useDarkMode } from '@perses-ui/core';
 import { MouseEvent, useState } from 'react';
 import { useProjectQuery } from '../model/project-client';
 import { useSnackbar } from '../context/SnackbarProvider';
+import { useDarkMode } from '../context/DarkMode';
 
 function ProjectMenu(): JSX.Element {
   const { exceptionSnackbar } = useSnackbar();
@@ -87,6 +90,48 @@ function ProjectMenu(): JSX.Element {
   return <></>;
 }
 
+function UserSettingsMenu(): JSX.Element {
+  const { exceptionSnackbar } = useSnackbar();
+  const { isDarkModeEnabled, setDarkMode } = useDarkMode();
+  const [darkModeLoading, setDarkModeLoading] = useState(false);
+
+  const handleDarkModeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handleDarkModeChange -> e: ', e);
+    try {
+      setDarkModeLoading(true);
+      console.log('darkModeLoading: ', darkModeLoading);
+      await setDarkMode(e.target.checked);
+    } catch (e) {
+      exceptionSnackbar(e);
+    } finally {
+      setDarkModeLoading(false);
+    }
+  };
+
+  return (
+    <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          paddingLeft: (theme) => theme.spacing(2),
+        }}
+      >
+        <Switch
+          id="theme"
+          sx={{
+            [`& .${switchClasses.track}`]: {
+              backgroundColor: (theme) => theme.palette.text.secondary,
+            },
+          }}
+          checked={isDarkModeEnabled}
+          onChange={handleDarkModeChange}
+        />
+      </Box>
+    </Box>
+  );
+}
+
 const style: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'row',
@@ -103,7 +148,17 @@ export default function Header(): JSX.Element {
           <Divider orientation="vertical" flexItem sx={{ borderRightColor: 'rgba(255,255,255,0.2)' }} />
           <ProjectMenu />
         </Box>
-        <Switch />
+        <UserSettingsMenu />
+        {/* <Switch 
+          id="theme"
+          sx={{
+            [`& .${switchClasses.track}`]: {
+              backgroundColor: (theme) => theme.palette.text.secondary,
+            },
+          }}
+          checked={isDarkModeEnabled}
+          onChange={handleDarkModeChange}
+        /> */}
       </Toolbar>
     </AppBar>
   );

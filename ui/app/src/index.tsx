@@ -11,29 +11,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import { CssBaseline } from '@material-ui/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { enableMapSet } from 'immer';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { getDarkTheme, getLightTheme } from '@perses-ui/core';
+// import { getDarkTheme, getLightTheme } from '@perses-ui/core';
 import App from './App';
 import { SnackbarProvider } from './context/SnackbarProvider';
+import { DarkModeContextProvider } from './context/DarkMode';
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } });
-const isDarkModeEnabled = true;
+// const isDarkModeEnabled = true;
 
 function renderApp() {
   console.log('renderApp...');
   ReactDOM.render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={isDarkModeEnabled ? getDarkTheme() : getLightTheme()}>
+        <DarkModeContextProvider>
           <SnackbarProvider anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
             <CssBaseline />
             <App />
           </SnackbarProvider>
-        </ThemeProvider>
+        </DarkModeContextProvider>
       </QueryClientProvider>
     </React.StrictMode>,
     document.getElementById('root')
