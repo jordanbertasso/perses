@@ -142,7 +142,8 @@ const decimalUnitKindsSet = new Set<string>(decimalUnitKinds);
 type DecimalUnitOptions = {
   kind: typeof decimalUnitKinds[number];
   decimal_places: number;
-  suffix?: 'string';
+  notation?: string;
+  suffix?: string;
   unitDisplay?: 'short' | 'long' | 'narrow'; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat
 };
 
@@ -171,6 +172,7 @@ function formatDecimal(value: number, unitOptions: DecimalUnitOptions): string {
     minimumFractionDigits: 0,
     maximumFractionDigits: maximumFractionDigits,
     useGrouping: true,
+    notation: unitOptions.notation ?? 'standard',
   };
   const decimalFormatter = new Intl.NumberFormat('en-US', formatParams);
   return decimalFormatter.format(value);

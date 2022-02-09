@@ -18,6 +18,7 @@ import { GridComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { useEffect, useMemo, useState, useLayoutEffect, useRef } from 'react';
 import { Box } from '@mui/material';
+// import { formatValue, UnitOptions } from '../../model/units';
 import { useRunningGraphQueries } from './GraphQueryRunner';
 import { TooltipData, emptyTooltipData } from './tooltip/tooltip-model';
 import { getRandomColor } from './utils/palette-gen';
@@ -103,6 +104,17 @@ function LineChart(props: LineChartProps) {
       },
       yAxis: {
         type: 'value',
+        axisLabel: {
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+          formatter: (value: any) => {
+            // const unitOptions: UnitOptions = {
+            //   kind: 'Decimal',
+            //   notation: 'compact',
+            // };
+            // formatValue(value, )
+            return value;
+          },
+        },
       },
       grid: {
         top: 10,
