@@ -213,8 +213,8 @@ const benchmarkDashboard: DashboardResource = {
           },
           calculation: 'LastNumber',
           unit: {
-            kind: 'Decimal',
-            suffix: 'byte',
+            kind: 'Bytes',
+            decimal_places: 2,
           },
         },
       },
@@ -229,15 +229,13 @@ const benchmarkDashboard: DashboardResource = {
             kind: 'PrometheusGraphQuery',
             options: {
               query: 'node_memory_Buffers_bytes{job="node",instance="$instance"}',
-              // query:
-              //   '(((count(count(node_cpu_seconds_total{job="node",instance="$instance"}) by (cpu))) - avg(sum by (mode)(rate(node_cpu_seconds_total{mode="idle",job="node",instance="$instance"}[$interval])))) * 100) / count(count(node_cpu_seconds_total{job="node",instance="$instance"}) by (cpu))',
-              // // '((node_memory_SwapTotal_bytes{job="node",instance="$instance"} - node_memory_SwapFree_bytes{job="node",instance="$instance"}) / (node_memory_SwapTotal_bytes{job="node",instance="$instance"} )) * 100',
             },
           },
           calculation: 'Mean',
           unit: {
             kind: 'Decimal',
             decimal_places: 2,
+            // notation: 'compact',
             // suffix: 'celsius', // https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier
           },
         },
@@ -252,15 +250,12 @@ const benchmarkDashboard: DashboardResource = {
           query: {
             kind: 'PrometheusGraphQuery',
             options: {
-              query:
-                '(((count(count(node_cpu_seconds_total{job="node",instance="$instance"}) by (cpu))) - avg(sum by (mode)(rate(node_cpu_seconds_total{mode="idle",job="node",instance="$instance"}[$interval])))) * 100) / count(count(node_cpu_seconds_total{job="node",instance="$instance"}) by (cpu))',
+              query: 'node_memory_Buffers_bytes{job="node",instance="$instance"}',
             },
           },
-          calculation: 'Mean', // 'First', 'Last', 'LastNumber'
+          calculation: 'LastNumber',
           unit: {
-            kind: 'Decimal', // 'Percent', 'Milliseconds', 'Seconds', 'Minutes', 'Hours', 'Days', 'Weeks', 'Months', 'Years'
-            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#unit_formatting
-            suffix: 'gigabyte',
+            kind: 'Bytes',
           },
           sparkline: {
             show: true,

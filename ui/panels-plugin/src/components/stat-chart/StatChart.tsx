@@ -95,6 +95,10 @@ export function StatChart(props: StatChartProps) {
     const isLargePanel = width > 250 ? true : false;
     const nameFontSize = isLargePanel === true ? 30 : 12;
 
+    if (unit.kind === 'Decimal' && !isLargePanel) {
+      unit.notation = 'compact';
+    }
+
     const statSeries: Array<GaugeSeriesOption | LineSeriesOption> = [
       {
         type: 'gauge',

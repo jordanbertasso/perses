@@ -14,7 +14,7 @@
 import { IsSanctionedSimpleUnitIdentifier } from '@formatjs/ecma402-abstract';
 import { Duration, milliseconds } from 'date-fns';
 
-export type UnitOptions = TimeUnitOptions | PercentUnitOptions | DecimalUnitOptions;
+export type UnitOptions = TimeUnitOptions | PercentUnitOptions | DecimalUnitOptions | ByteUnitOptions;
 
 export function formatValue(value: number, unitOptions?: UnitOptions): string {
   if (unitOptions === undefined) {
@@ -27,6 +27,10 @@ export function formatValue(value: number, unitOptions?: UnitOptions): string {
 
   if (isPercentUnit(unitOptions)) {
     return formatPercent(value, unitOptions);
+  }
+
+  if (isByteUnit(unitOptions)) {
+    return formatBytes(value, unitOptions.decimal_places);
   }
 
   if (isDecimalUnit(unitOptions)) {
@@ -142,7 +146,7 @@ const decimalUnitKindsSet = new Set<string>(decimalUnitKinds);
 type DecimalUnitOptions = {
   kind: typeof decimalUnitKinds[number];
   decimal_places: number;
-  notation?: string;
+  notation?: 'standard' | 'scientific' | 'engineering' | 'compact';
   suffix?: string;
   unitDisplay?: 'short' | 'long' | 'narrow'; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat
 };
@@ -176,4 +180,32 @@ function formatDecimal(value: number, unitOptions: DecimalUnitOptions): string {
   };
   const decimalFormatter = new Intl.NumberFormat('en-US', formatParams);
   return decimalFormatter.format(value);
+}
+
+const byteUnitKinds = ['Bytes'] as const;
+const byteUnitKindsSet = new Set<string>(byteUnitKinds);
+
+type ByteUnitOptions = {
+  kind: typeof byteUnitKinds[number];
+  decimal_places: number;
+};
+
+function isByteUnit(unitOptions: UnitOptions): unitOptions is ByteUnitOptions {
+  return byteUnitKindsSet.has(unitOptions.kind);
+}
+
+// https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript/18650828#18650828
+export function formatBytes(bytes: number, decimal_places = 2): string {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+
+  const dm = decimal_places < 0 ? 0 : decimal_places;
+
+  // TODO (sjcobb): allow for overriding sizes, refactor byteUnitKinds
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
