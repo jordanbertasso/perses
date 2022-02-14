@@ -20,6 +20,8 @@ import {
   usePanelState,
 } from '@perses-ui/core';
 import { Box, Skeleton } from '@mui/material';
+import { mapKeys, camelCase, rearg } from 'lodash-es';
+// import { LineSeriesOption } from 'echarts/charts';
 import { useMemo } from 'react';
 import { CalculationsMap, CalculationType } from '../../model/calculations';
 import { UnitOptions } from '../../model/units';
@@ -38,6 +40,9 @@ interface StatChartOptions extends JsonObject {
   thresholds?: ThresholdOptions;
   sparkline?: {
     show: boolean;
+    line_color?: string;
+    line_width?: number;
+    area_color?: string;
   };
 }
 
@@ -49,7 +54,10 @@ export function StatChartPanel(props: StatChartPanelProps) {
     },
   } = props;
 
-  const showSparkline = sparkline && sparkline.show === true ? true : false;
+  // TODO (sjcobb): how to handle thresholds? is convertThresholds needed?
+  // - probably not for StatChart but GaugeChart needs to move convertThresholds to GaugeChartPanel
+
+  // const showSparkline = sparkline && sparkline.show === true ? true : false;
   const thresholds = props.definition.options.thresholds ?? defaultThresholdInput;
   const { contentDimensions } = usePanelState();
   const { data, loading, error } = useGraphQuery(query);
@@ -71,6 +79,25 @@ export function StatChartPanel(props: StatChartPanelProps) {
     );
   }
 
+  // TODO (sjcobb): perses sparkline snake_case -> StatChart camelCase ECharts LineSeriesOption conversion
+  // https://stackoverflow.com/questions/40710628/how-to-convert-snake-case-to-camelcase-in-my-app/40710684#40710684
+  console.log('(perses format) sparkline: ', sparkline);
+  const sparklineOption = mapKeys(sparkline, rearg(camelCase, 1));
+  console.log('(converted) sparklineOption: ', sparklineOption);
+
+  // // https://echarts.apache.org/en/option.html#series-line
+  // const mockSparklineOption: LineSeriesOption = {
+  //   name: 'line series 1',
+  //   lineStyle: {
+  //     color: '#000',
+  //     width: 2,
+  //   },
+  //   areaStyle: {
+  //     color: '#FF0000', // red
+  //     opacity: 0.5,
+  //   },
+  // };
+
   return (
     <StatChart
       width={contentDimensions.width}
@@ -78,7 +105,7 @@ export function StatChartPanel(props: StatChartPanelProps) {
       data={chartData}
       unit={unit}
       thresholds={thresholds}
-      showSparkline={showSparkline}
+      sparkline={sparklineOption}
     />
   );
 }

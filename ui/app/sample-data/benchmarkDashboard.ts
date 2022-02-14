@@ -258,6 +258,9 @@ const benchmarkDashboard: DashboardResource = {
           },
           sparkline: {
             show: true,
+            line_color: '#FFFF00', // yellow
+            line_width: 10,
+            area_color: '#FFA500', // orange
           },
           thresholds: {
             default_color: '#1473E6', // blue
@@ -336,20 +339,20 @@ const benchmarkDashboard: DashboardResource = {
           },
         },
         items: [
-          {
-            x: 0,
-            y: 0,
-            width: 12,
-            height: 6,
-            content: { $ref: '#/panels/seriesTestAlt' },
-          },
-          {
-            x: 12,
-            y: 0,
-            width: 12,
-            height: 6,
-            content: { $ref: '#/panels/multiQueries' },
-          },
+          // {
+          //   x: 0,
+          //   y: 0,
+          //   width: 12,
+          //   height: 6,
+          //   content: { $ref: '#/panels/seriesTestAlt' },
+          // },
+          // {
+          //   x: 12,
+          //   y: 0,
+          //   width: 12,
+          //   height: 6,
+          //   content: { $ref: '#/panels/multiQueries' },
+          // },
         ],
       },
       {
@@ -361,34 +364,34 @@ const benchmarkDashboard: DashboardResource = {
           },
         },
         items: [
-          {
-            x: 0,
-            y: 0,
-            width: 2,
-            height: 2,
-            content: { $ref: '#/panels/statSm' },
-          },
-          {
-            x: 0,
-            y: 2,
-            width: 2,
-            height: 2,
-            content: { $ref: '#/panels/statRAM' },
-          },
-          {
-            x: 0,
-            y: 4,
-            width: 2,
-            height: 2,
-            content: { $ref: '#/panels/statTotalRAM' },
-          },
-          {
-            x: 2,
-            y: 0,
-            width: 4,
-            height: 6,
-            content: { $ref: '#/panels/statMd' },
-          },
+          // {
+          //   x: 0,
+          //   y: 0,
+          //   width: 2,
+          //   height: 2,
+          //   content: { $ref: '#/panels/statSm' },
+          // },
+          // {
+          //   x: 0,
+          //   y: 2,
+          //   width: 2,
+          //   height: 2,
+          //   content: { $ref: '#/panels/statRAM' },
+          // },
+          // {
+          //   x: 0,
+          //   y: 4,
+          //   width: 2,
+          //   height: 2,
+          //   content: { $ref: '#/panels/statTotalRAM' },
+          // },
+          // {
+          //   x: 2,
+          //   y: 0,
+          //   width: 4,
+          //   height: 6,
+          //   content: { $ref: '#/panels/statMd' },
+          // },
           {
             x: 6,
             y: 0,
