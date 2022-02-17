@@ -317,20 +317,20 @@ const benchmarkDashboard: DashboardResource = {
           },
         },
         items: [
-          // {
-          //   x: 0,
-          //   y: 0,
-          //   width: 12,
-          //   height: 6,
-          //   content: { $ref: '#/panels/seriesTest' },
-          // },
-          // {
-          //   x: 12,
-          //   y: 0,
-          //   width: 12,
-          //   height: 6,
-          //   content: { $ref: '#/panels/basicEx' },
-          // },
+          {
+            x: 0,
+            y: 0,
+            width: 12,
+            height: 6,
+            content: { $ref: '#/panels/seriesTest' },
+          },
+          {
+            x: 12,
+            y: 0,
+            width: 12,
+            height: 6,
+            content: { $ref: '#/panels/basicEx' },
+          },
         ],
       },
       {

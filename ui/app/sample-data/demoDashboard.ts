@@ -87,7 +87,8 @@ const demoDashboard: DashboardResource = {
           unit: {
             kind: 'Decimal',
             decimal_places: 2,
-            suffix: 'kilogram', // https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier
+            suffix: 'byte',
+            // suffix: 'kilogram', // https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier
           },
           // sparkline: {},
           // thresholds: {
@@ -131,7 +132,7 @@ const demoDashboard: DashboardResource = {
           },
         },
       },
-      statMd: {
+      statLg: {
         kind: 'StatChart',
         display: {
           name: 'Stat Md',
@@ -148,22 +149,16 @@ const demoDashboard: DashboardResource = {
           calculation: 'Mean',
           unit: {
             kind: 'Decimal',
-            decimal_places: 4,
-            // suffix: 'celsius', // https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier
+            decimal_places: 1,
+            suffix: 'byte', // https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier
           },
           thresholds: {
-            default_color: '#EA4747',
+            default_color: '#1473E6', // blue
           },
-          sparkline: {
-            line_color: '#FFE3E3',
-            line_width: 1.5,
-            line_opacity: 0.6,
-            area_color: '#FFBABA',
-            area_opacity: 0.4,
-          },
+          sparkline: {},
         },
       },
-      statLg: {
+      statCustom: {
         kind: 'StatChart',
         display: {
           name: 'StatChart',
@@ -178,12 +173,18 @@ const demoDashboard: DashboardResource = {
           },
           calculation: 'Mean',
           unit: {
-            kind: 'Decimal',
-            suffix: 'byte',
+            kind: 'Percent',
+            decimal_places: 2,
           },
-          sparkline: {},
+          sparkline: {
+            line_color: '#FFE3E3',
+            line_width: 1.5,
+            line_opacity: 0.6,
+            area_color: '#FFBABA',
+            area_opacity: 0.4,
+          },
           thresholds: {
-            default_color: '#1473E6', // blue
+            default_color: '#EA4747',
             steps: [
               {
                 value: 85,
@@ -195,7 +196,7 @@ const demoDashboard: DashboardResource = {
           },
         },
       },
-      statLgDebug: {
+      statCustomDebug: {
         kind: 'StatChart',
         display: {
           name: 'StatChart Options',
@@ -203,12 +204,18 @@ const demoDashboard: DashboardResource = {
         options: {
           calculation: 'Mean',
           unit: {
-            kind: 'Decimal',
-            suffix: 'byte',
+            kind: 'Percent',
+            decimal_places: 2,
           },
-          sparkline: {},
+          sparkline: {
+            line_color: '#FFE3E3',
+            line_width: 1.5,
+            line_opacity: 0.6,
+            area_color: '#FFBABA',
+            area_opacity: 0.4,
+          },
           thresholds: {
-            default_color: '#1473E6', // blue
+            default_color: '#EA4747',
             steps: [
               {
                 value: 85,
@@ -454,36 +461,72 @@ const demoDashboard: DashboardResource = {
           unit: { kind: 'Bytes' },
         },
       },
-      lineSingleQuery: {
+      lineCustom: {
         kind: 'LineChart',
         display: { name: 'LineChart' },
         options: {
+          unit: { kind: 'Decimal' },
           queries: [
             {
               kind: 'PrometheusGraphQuery',
               options: {
                 query:
-                  '1 - node_filesystem_free_bytes{job="node",instance="$instance",fstype!="rootfs",mountpoint!~"/(run|var).*",mountpoint!=""} / node_filesystem_size_bytes{job="node",instance="$instance"}',
+                  'node_memory_MemTotal_bytes{job="node",instance="$instance"} - node_memory_MemFree_bytes{job="node",instance="$instance"} - node_memory_Buffers_bytes{job="node",instance="$instance"} - node_memory_Cached_bytes{job="node",instance="$instance"}',
+              },
+            },
+            {
+              kind: 'PrometheusGraphQuery',
+              options: {
+                query: 'node_memory_Buffers_bytes{job="node",instance="$instance"}',
+              },
+            },
+            {
+              kind: 'PrometheusGraphQuery',
+              options: {
+                query: 'node_memory_Cached_bytes{job="node",instance="$instance"}',
+              },
+            },
+            {
+              kind: 'PrometheusGraphQuery',
+              options: {
+                query: 'node_memory_MemFree_bytes{job="node",instance="$instance"}',
               },
             },
           ],
-          unit: { kind: 'Percent' },
         },
       },
-      lineSingleQueryDebug: {
+      lineCustomDebug: {
         kind: 'LineChart',
         display: { name: 'LineChart Options' },
         options: {
+          unit: { kind: 'Decimal' },
           queries: [
             {
               kind: 'PrometheusGraphQuery',
               options: {
                 query:
-                  '1 - node_filesystem_free_bytes{job="node",instance="$instance",fstype!="rootfs",mountpoint!~"/(run|var).*",mountpoint!=""} / node_filesystem_size_bytes{job="node",instance="$instance"}',
+                  'node_memory_MemTotal_bytes{job="node",instance="$instance"} - node_memory_MemFree_bytes{job="node",instance="$instance"} - node_memory_Buffers_bytes{job="node",instance="$instance"} - node_memory_Cached_bytes{job="node",instance="$instance"}',
+              },
+            },
+            {
+              kind: 'PrometheusGraphQuery',
+              options: {
+                query: 'node_memory_Buffers_bytes{job="node",instance="$instance"}',
+              },
+            },
+            {
+              kind: 'PrometheusGraphQuery',
+              options: {
+                query: 'node_memory_Cached_bytes{job="node",instance="$instance"}',
+              },
+            },
+            {
+              kind: 'PrometheusGraphQuery',
+              options: {
+                query: 'node_memory_MemFree_bytes{job="node",instance="$instance"}',
               },
             },
           ],
-          unit: { kind: 'Percent' },
           debug: true,
         },
       },
@@ -556,23 +599,23 @@ const demoDashboard: DashboardResource = {
           {
             x: 2,
             y: 0,
-            width: 4,
-            height: 6,
-            content: { $ref: '#/panels/statMd' },
-          },
-          {
-            x: 6,
-            y: 0,
             width: 10,
             height: 6,
             content: { $ref: '#/panels/statLg' },
+          },
+          {
+            x: 12,
+            y: 0,
+            width: 4,
+            height: 6,
+            content: { $ref: '#/panels/statCustom' },
           },
           {
             x: 16,
             y: 0,
             width: 8,
             height: 6,
-            content: { $ref: '#/panels/statLgDebug' },
+            content: { $ref: '#/panels/statCustomDebug' },
           },
         ],
       },
@@ -641,18 +684,18 @@ const demoDashboard: DashboardResource = {
           {
             x: 0,
             y: 0,
-            width: 12,
+            width: 16,
             height: 6,
             // content: { $ref: '#/panels/lineSeriesTest' },
-            content: { $ref: '#/panels/lineSingleQuery' },
+            content: { $ref: '#/panels/lineCustom' },
           },
           {
-            x: 12,
+            x: 16,
             y: 0,
-            width: 12,
+            width: 8,
             height: 6,
             // content: { $ref: '#/panels/lineMultiQueries' },
-            content: { $ref: '#/panels/lineSingleQueryDebug' },
+            content: { $ref: '#/panels/lineCustomDebug' },
           },
         ],
       },
@@ -670,14 +713,14 @@ const demoDashboard: DashboardResource = {
           //   y: 0,
           //   width: 12,
           //   height: 6,
-          //   content: { $ref: '#/panels/lineSingleQuery' },
+          //   content: { $ref: '#/panels/lineCustom' },
           // },
           // {
           //   x: 12,
           //   y: 0,
           //   width: 12,
           //   height: 6,
-          //   content: { $ref: '#/panels/lineSingleQuery' },
+          //   content: { $ref: '#/panels/lineCustom' },
           // },
         ],
       },

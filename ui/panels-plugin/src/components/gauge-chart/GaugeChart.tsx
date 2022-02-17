@@ -195,6 +195,16 @@ export function GaugeChart(props: GaugeChartProps) {
           ],
         },
       ],
+      // media: [
+      //   {
+      //     query: {
+      //       maxWidth: 180,
+      //     },
+      //     option: {
+      //       textStyle: {},
+      //     },
+      //   },
+      // ],
     };
   }, [data, unit, thresholds]);
 
