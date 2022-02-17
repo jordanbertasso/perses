@@ -228,14 +228,6 @@ const demoDashboard: DashboardResource = {
         kind: 'GaugeChart',
         display: { name: 'GaugeChart Options' },
         options: {
-          debug: true,
-          query: {
-            kind: 'PrometheusGraphQuery',
-            options: {
-              query:
-                '(((count(count(node_cpu_seconds_total{job="node",instance="$instance"}) by (cpu))) - avg(sum by (mode)(rate(node_cpu_seconds_total{mode="idle",job="node",instance="$instance"}[$interval])))) * 100) / count(count(node_cpu_seconds_total{job="node",instance="$instance"}) by (cpu))',
-            },
-          },
           calculation: 'LastNumber',
           unit: { kind: 'Percent' },
           thresholds: {
@@ -250,6 +242,14 @@ const demoDashboard: DashboardResource = {
                 // color: '#0000FF',
               },
             ],
+          },
+          debug: true,
+          query: {
+            kind: 'PrometheusGraphQuery',
+            options: {
+              query:
+                '(((count(count(node_cpu_seconds_total{job="node",instance="$instance"}) by (cpu))) - avg(sum by (mode)(rate(node_cpu_seconds_total{mode="idle",job="node",instance="$instance"}[$interval])))) * 100) / count(count(node_cpu_seconds_total{job="node",instance="$instance"}) by (cpu))',
+            },
           },
         },
       },
@@ -551,6 +551,34 @@ const demoDashboard: DashboardResource = {
           //   content: { $ref: '#/panels/gaugeSystemLoad' },
           // },
           // {
+          //   x: 0,
+          //   y: 4,
+          //   width: 3,
+          //   height: 4,
+          //   content: { $ref: '#/panels/gaugeSystemLoadAlt' },
+          // },
+          // {
+          //   x: 3,
+          //   y: 4,
+          //   width: 3,
+          //   height: 4,
+          //   content: { $ref: '#/panels/gaugeRam' },
+          // },
+          {
+            x: 6,
+            y: 0,
+            width: 6,
+            height: 8,
+            content: { $ref: '#/panels/gaugeEx' },
+          },
+          {
+            x: 12,
+            y: 0,
+            width: 12,
+            height: 8,
+            content: { $ref: '#/panels/gaugeExDebug' },
+          },
+          // {
           //   x: 6,
           //   y: 0,
           //   width: 3,
@@ -571,20 +599,27 @@ const demoDashboard: DashboardResource = {
           //   height: 4,
           //   content: { $ref: '#/panels/gaugeRoot' },
           // },
-          {
-            x: 15,
-            y: 0,
-            width: 3,
-            height: 4,
-            content: { $ref: '#/panels/gaugeEx' },
-          },
-          {
-            x: 18,
-            y: 0,
-            width: 3,
-            height: 4,
-            content: { $ref: '#/panels/gaugeExDebug' },
-          },
+          // {
+          //   x: 12,
+          //   y: 0,
+          //   width: 3,
+          //   height: 4,
+          //   content: { $ref: '#/panels/gaugeEx' },
+          // },
+          // {
+          //   x: 15,
+          //   y: 0,
+          //   width: 3,
+          //   height: 4,
+          //   content: { $ref: '#/panels/gaugeEx' },
+          // },
+          // {
+          //   x: 18,
+          //   y: 0,
+          //   width: 6,
+          //   height: 4,
+          //   content: { $ref: '#/panels/gaugeExDebug' },
+          // },
         ],
       },
       {

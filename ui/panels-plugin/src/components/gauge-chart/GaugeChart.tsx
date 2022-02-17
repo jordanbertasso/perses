@@ -71,6 +71,10 @@ export function GaugeChart(props: GaugeChartProps) {
       tooltip: {
         show: false,
       },
+      // grid: {
+      //   left: '10%',
+      //   right: '10%',
+      // },
       series: [
         {
           type: 'gauge',
@@ -140,7 +144,8 @@ export function GaugeChart(props: GaugeChartProps) {
         {
           type: 'gauge',
           center: ['50%', '65%'],
-          radius: '114%',
+          // radius: '114%', // prev
+          radius: '109%',
           startAngle: 200,
           endAngle: -20,
           min: 0,

@@ -56,13 +56,20 @@ export function GaugeChartPanel(props: GaugeChartPanelProps) {
     return value;
   }, [data, calculation]);
 
-  if (debug === true) {
-    return <ChartDetails chartOptions={props.definition.options} showQuery={true} />;
-  }
-
   if (error) throw error;
 
   if (contentDimensions === undefined) return null;
+
+  if (debug === true) {
+    return (
+      <ChartDetails
+        width={contentDimensions.width}
+        height={contentDimensions.height}
+        chartOptions={props.definition.options}
+        showQuery={true}
+      />
+    );
+  }
 
   if (loading === true) {
     return (

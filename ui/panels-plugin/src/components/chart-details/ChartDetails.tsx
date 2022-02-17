@@ -16,17 +16,28 @@ import { Box } from '@mui/material';
 import { JsonObject } from '@perses-ui/core';
 
 interface ChartDetails extends JsonObject {
+  width: number;
+  height: number;
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   chartOptions: any;
   showQuery?: boolean;
 }
 
 export function ChartDetails(props: ChartDetails) {
-  const { chartOptions } = props;
-
+  const { height, chartOptions } = props;
+  // TODO (sjcobb): filter out query object when showQuery false and hide debug boolean
   return (
-    <Box sx={{ backgroundColor: '#333', color: '#FFF' }}>
-      <pre>{JSON.stringify(chartOptions, null, 2)}</pre>
+    <Box
+      sx={{
+        height: height,
+        overflowY: 'scroll',
+        padding: '4px 5px',
+        backgroundColor: '#333',
+        color: '#FFF',
+        fontSize: '10px',
+      }}
+    >
+      <pre style={{ margin: '0', whiteSpace: 'break-spaces' }}>{JSON.stringify(chartOptions, null, 2)}</pre>
     </Box>
   );
 }
