@@ -17,6 +17,7 @@ import { useMemo } from 'react';
 import { CalculationsMap, CalculationType } from '../../model/calculations';
 import { UnitOptions } from '../../model/units';
 import { GaugeChart, GaugeChartData } from '../../components/gauge-chart/GaugeChart';
+import { ChartDetails } from '../../components/chart-details/ChartDetails';
 import { defaultThresholdInput, ThresholdOptions } from '../../model/thresholds';
 
 export const GaugeChartKind = 'GaugeChart' as const;
@@ -28,12 +29,13 @@ interface GaugeChartOptions extends JsonObject {
   calculation: CalculationType;
   unit?: UnitOptions;
   thresholds?: ThresholdOptions;
+  debug?: boolean;
 }
 
 export function GaugeChartPanel(props: GaugeChartPanelProps) {
   const {
     definition: {
-      options: { query, calculation },
+      options: { query, calculation, debug },
     },
   } = props;
   const unit = props.definition.options.unit ?? { kind: 'Percent', decimal_places: 1 };
@@ -53,6 +55,10 @@ export function GaugeChartPanel(props: GaugeChartPanelProps) {
 
     return value;
   }, [data, calculation]);
+
+  if (debug === true) {
+    return <ChartDetails chartOptions={props.definition.options} showQuery={true} />;
+  }
 
   if (error) throw error;
 
