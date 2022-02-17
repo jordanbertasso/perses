@@ -17,8 +17,8 @@ import { useMemo } from 'react';
 import { CalculationsMap, CalculationType } from '../../model/calculations';
 import { UnitOptions } from '../../model/units';
 import { GaugeChart, GaugeChartData } from '../../components/gauge-chart/GaugeChart';
-import { ChartDetails } from '../../components/chart-details/ChartDetails';
 import { defaultThresholdInput, ThresholdOptions } from '../../model/thresholds';
+import { ChartDetails } from '../../components/chart-details/ChartDetails';
 
 export const GaugeChartKind = 'GaugeChart' as const;
 

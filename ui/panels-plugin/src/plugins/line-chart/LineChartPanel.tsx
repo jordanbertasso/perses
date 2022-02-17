@@ -13,6 +13,7 @@
 
 import { AnyGraphQueryDefinition, JsonObject, PanelProps, usePanelState } from '@perses-ui/core';
 import { useMemo } from 'react';
+import { ChartDetails } from '../../components/chart-details/ChartDetails';
 import LineChart from './LineChart';
 import GraphQueryRunner from './GraphQueryRunner';
 import UPlotChart from './uplot/UPlotChart';
@@ -24,12 +25,13 @@ export type LineChartProps = PanelProps<LineChartOptions>;
 interface LineChartOptions extends JsonObject {
   queries: AnyGraphQueryDefinition[];
   show_legend?: boolean;
+  debug?: boolean;
 }
 
 export function LineChartPanel(props: LineChartProps) {
   const {
     definition: {
-      options: { queries },
+      options: { queries, debug },
     },
   } = props;
   const { contentDimensions } = usePanelState();
@@ -38,6 +40,19 @@ export function LineChartPanel(props: LineChartProps) {
     const params = new URLSearchParams(window.location.search);
     return params.get('uplot') === 'true';
   }, []);
+
+  if (contentDimensions === undefined) return null;
+
+  if (debug === true) {
+    return (
+      <ChartDetails
+        width={contentDimensions.width}
+        height={contentDimensions.height}
+        chartOptions={props.definition.options}
+        showQuery={true}
+      />
+    );
+  }
 
   const Chart = isUPlot ? UPlotChart : LineChart;
 

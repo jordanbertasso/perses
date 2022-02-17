@@ -26,6 +26,7 @@ import { CalculationsMap, CalculationType } from '../../model/calculations';
 import { UnitOptions } from '../../model/units';
 import { ThresholdOptions, defaultThresholdInput } from '../../model/thresholds';
 import { StatChartData, StatChart } from '../../components/stat-chart/StatChart';
+import { ChartDetails } from '../../components/chart-details/ChartDetails';
 
 export const StatChartKind = 'StatChart' as const;
 
@@ -46,13 +47,14 @@ interface StatChartOptions extends JsonObject {
   unit: UnitOptions;
   thresholds?: ThresholdOptions;
   sparkline?: SparklineOptions;
+  debug?: boolean;
 }
 
 export function StatChartPanel(props: StatChartPanelProps) {
   const {
     definition: {
       display: { name },
-      options: { query, calculation, unit, sparkline },
+      options: { query, calculation, unit, sparkline, debug },
     },
   } = props;
   const thresholds = props.definition.options.thresholds ?? defaultThresholdInput;
@@ -63,6 +65,17 @@ export function StatChartPanel(props: StatChartPanelProps) {
   if (error) throw error;
 
   if (contentDimensions === undefined) return null;
+
+  if (debug === true) {
+    return (
+      <ChartDetails
+        width={contentDimensions.width}
+        height={contentDimensions.height}
+        chartOptions={props.definition.options}
+        showQuery={true}
+      />
+    );
+  }
 
   if (loading === true) {
     return (
