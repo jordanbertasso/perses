@@ -90,6 +90,7 @@ export interface ZoomEventData {
 interface LineChartProps {
   height: number;
   data: EChartsDataFormat;
+  stepSize?: number;
   grid?: GridComponentOption;
   legend?: LegendComponentOption;
   toolbox?: ToolboxComponentOption;
@@ -101,6 +102,7 @@ interface LineChartProps {
 export function LineChart({
   height,
   data,
+  stepSize,
   grid,
   legend,
   toolbox,
@@ -261,7 +263,7 @@ export function LineChart({
     };
 
     return option;
-  }, [data, theme, grid, legend, toolbox, dataZoomEnabled, visualMap]);
+  }, [data, stepSize, theme, grid, legend, toolbox, dataZoomEnabled, visualMap]);
 
   return (
     <Box
@@ -290,11 +292,21 @@ export function LineChart({
   );
 }
 
-function getFormattedDate(value: number) {
-  const XAXIS_DATE_FORMAT = new Intl.DateTimeFormat(undefined, {
+function getFormattedDate(value: number, stepSize?: number) {
+  const dateFormatOptions: Intl.DateTimeFormatOptions = {
     hour: 'numeric',
     minute: 'numeric',
     hour12: false,
-  });
-  return XAXIS_DATE_FORMAT.format(value * 1000);
+  };
+  if (stepSize !== undefined) {
+    if (stepSize <= 15) {
+      dateFormatOptions.second = 'numeric';
+    } else if (stepSize > 151) {
+      // corresponds to greater than 1 day
+      dateFormatOptions.month = 'numeric';
+      dateFormatOptions.day = 'numeric';
+    }
+  }
+  const DATE_FORMAT = new Intl.DateTimeFormat(undefined, dateFormatOptions);
+  return DATE_FORMAT.format(value * 1000);
 }
