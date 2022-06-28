@@ -92,6 +92,14 @@ coverage-html: integration-test
 	@echo ">> Print test coverage"
 	$(GO) tool cover -html=$(COVER_PROFILE)
 
+.PHONY: ui-install
+ui-install:
+	cd ./ui && npm install
+
+.PHONY: ui-install ui-lint
+ui-lint:
+	cd ./ui && npm run lint
+
 .PHONY: build
 build: build-ui build-api build-cli
 
@@ -100,9 +108,9 @@ build-api: generate
 	@echo ">> build the perses api"
 	CGO_ENABLED=0 GOARCH=${GOARCH} $(GO) build ${LDFLAGS} -o ./bin/perses ./cmd/perses
 
-.PHONY: build-ui
+.PHONY: ui-install build-ui
 build-ui:
-	cd ./ui && npm install && npm run build
+	cd ./ui && npm run build
 
 .PHONY: build-cli
 build-cli:

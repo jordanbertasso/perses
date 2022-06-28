@@ -4,6 +4,11 @@
 
 set -e
 
+if ! command -v cue &> /dev?null; then
+  echo "the binary cue could not be found"
+  exit 1
+fi
+
 function test() {
   cd schemas/charts
   for d in *; do
@@ -15,12 +20,12 @@ function test() {
 }
 
 function fmt() {
-  find ./internal ./pkg ./schemas -name "*.cue" -exec cue fmt {} \;
+  find ./.dagger ./internal ./pkg ./schemas -name "*.cue" -exec cue fmt {} \;
 }
 
 function checkfmt {
   fmt
-  git diff --exit-code -- ./internal ./pkg ./schemas
+  git diff --exit-code -- ./.dagger ./internal ./pkg ./schemas
 }
 
 if [[ "$1" == "--fmt" ]]; then
