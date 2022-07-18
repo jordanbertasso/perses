@@ -24,6 +24,8 @@ export interface TimeRangeProviderProps {
  * Provider implementation that supplies the TimeRangeState at runtime.
  */
 export function TimeRangeStateProvider(props: TimeRangeProviderProps) {
+  // TODO (sjcobb): sync url with relative time, use utils from cloud
+
   const { initialValue, children } = props;
 
   // Use initialValue to populate state (TODO: Will prob need to expose "setter" API eventually)

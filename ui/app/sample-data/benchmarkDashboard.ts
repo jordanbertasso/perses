@@ -16,7 +16,7 @@ import { AnyVariableDefinition, DashboardResource } from '@perses-dev/core';
 const benchmarkDashboard: DashboardResource = {
   kind: 'Dashboard',
   metadata: {
-    name: 'Node Stats',
+    name: 'Demo Dashboard',
     project: 'perses',
     created_at: '2021-11-09',
     updated_at: '2021-11-09',
@@ -53,22 +53,22 @@ const benchmarkDashboard: DashboardResource = {
           all_value: '$__all',
         },
       } as AnyVariableDefinition,
-      interval: {
-        kind: 'Interval',
-        options: {
-          values: ['1m', '5m', '10m', '1h'],
-          auto: {
-            step_count: 50,
-            min_interval: '1m',
-          },
-        },
-        display: {
-          label: 'Interval',
-        },
-        selection: {
-          default_value: '1h',
-        },
-      } as AnyVariableDefinition,
+      // interval: {
+      //   kind: 'Interval',
+      //   options: {
+      //     values: ['1m', '5m', '10m', '1h'],
+      //     auto: {
+      //       step_count: 50,
+      //       min_interval: '1m',
+      //     },
+      //   },
+      //   display: {
+      //     label: 'Interval',
+      //   },
+      //   selection: {
+      //     default_value: '1h',
+      //   },
+      // } as AnyVariableDefinition,
     },
     panels: {
       seriesTest: {

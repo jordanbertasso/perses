@@ -11,11 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, BoxProps } from '@mui/material';
-import { combineSx } from '@perses-dev/components';
+import { Box, BoxProps, Stack, Typography } from '@mui/material';
+import { combineSx, TimeRangeSelector } from '@perses-dev/components';
 import { DashboardResource } from '@perses-dev/core';
 import { TimeRangeStateProvider, TemplateVariablesProvider } from '../context';
-import { Dashboard, VariableOptionsDrawer } from '../components';
+import { Dashboard, VariableOptionsDrawer, PageHeader } from '../components';
 
 export interface ViewDashboardProps extends BoxProps {
   dashboardResource: DashboardResource;
@@ -51,6 +51,20 @@ export function ViewDashboard(props: ViewDashboardProps) {
               overflowY: 'auto',
             }}
           >
+            <PageHeader
+              sx={{
+                backgroundColor: (theme) => theme.palette.background.paper,
+                minHeight: 78,
+                borderBottom: (theme) => `1px solid ${theme.palette.grey[100]}`,
+              }}
+            >
+              <Typography variant="h2" sx={{ fontWeight: (theme) => theme.typography.fontWeightRegular }}>
+                {dashboardResource.metadata.name}
+              </Typography>
+              <Stack direction="row" spacing={1}>
+                <TimeRangeSelector />
+              </Stack>
+            </PageHeader>
             <Dashboard spec={dashboardResource.spec} />
             {children}
           </Box>
