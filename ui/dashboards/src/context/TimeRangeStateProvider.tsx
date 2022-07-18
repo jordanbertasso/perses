@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useContext } from 'react';
 import { AbsoluteTimeRange, RelativeTimeRange, toAbsoluteTimeRange } from '@perses-dev/core';
 import { TimeRangeContext } from '@perses-dev/plugin-system';
 
@@ -39,4 +39,15 @@ export function TimeRangeStateProvider(props: TimeRangeProviderProps) {
   const ctx = useMemo(() => ({ timeRange }), [timeRange]);
 
   return <TimeRangeContext.Provider value={ctx}>{children}</TimeRangeContext.Provider>;
+}
+
+/**
+ * Gets the setters for Time Range state provided by the TimeRangeStateProvider at runtime.
+ */
+export function useTimeRangeSetters() {
+  const ctx = useContext(TimeRangeContext);
+  if (ctx === undefined) {
+    throw new Error('No TimeRangeContext found. Did you forget a Provider?');
+  }
+  return ctx;
 }

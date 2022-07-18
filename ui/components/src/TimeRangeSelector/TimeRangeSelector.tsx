@@ -19,14 +19,47 @@
 //   Typography,
 // } from '@mui/material';
 
+import { useCallback } from 'react';
+import { TextField } from '@mui/material';
+// import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
 interface TimeRangeSelectorProps {
   id?: string;
 }
 
 export const TimeRangeSelector = ({ id }: TimeRangeSelectorProps) => {
+  console.log('TimeRangeSelector -> id: ', id);
+
+  // const [{ value }, , { setValue }] = timeModeProps;
+
+  // const { setValue, setOptions } = useTemplateVariablesSetters();
+
+  const setValue = useCallback(
+    () => {
+      console.log('TimeRangeSelector -> setValue...');
+    },
+    []
+    // [setState, variableDefinitions]
+  );
+
   return (
-    <>
-      <p>TODO: add TimeRangeSelector component</p>
-    </>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      {/* <p>TODO: add TimeRangeSelector component</p> */}
+      <DateTimePicker
+        renderInput={(props) => <TextField {...props} />}
+        label="DateTimePicker"
+        value={1658153703847}
+        onChange={(newValue) => {
+          console.log(newValue);
+          // setValue(newValue);
+          setValue();
+        }}
+        // onChange={(newValue) => {
+        //   setValue(newValue);
+        // }}
+      />
+    </LocalizationProvider>
   );
 };
