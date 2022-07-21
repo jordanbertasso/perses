@@ -18,7 +18,7 @@ export * from './InfoTooltip';
 export * from './LineChart';
 export * from './GaugeChart';
 export * from './StatChart';
-export * from './TimeRangeSelector';
+// export * from './TimeRangeSelector';
 export * from './context/ChartsThemeProvider';
 export * from './utils';
 export * from './model';
