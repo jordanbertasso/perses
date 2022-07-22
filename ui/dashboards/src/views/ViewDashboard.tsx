@@ -62,7 +62,7 @@ export function ViewDashboard(props: ViewDashboardProps) {
                 {dashboardResource.metadata.name}
               </Typography>
               <Stack direction="row" spacing={1}>
-                <TimeRangeSelector start={new Date().getTime()} />
+                <TimeRangeSelector start={new Date().getTime()} end={new Date().getTime()} />
               </Stack>
             </PageHeader>
             <Dashboard spec={dashboardResource.spec} />
