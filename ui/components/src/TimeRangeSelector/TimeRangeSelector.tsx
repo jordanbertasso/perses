@@ -11,54 +11,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// import {
-//   styled,
-//   TooltipProps as MuiTooltipProps,
-//   Tooltip as MuiTooltip,
-//   tooltipClasses,
-//   Typography,
-// } from '@mui/material';
-
-import { useCallback } from 'react';
+import { useState } from 'react';
 import { TextField } from '@mui/material';
-// import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// import { isValid, format } from 'date-fns';
+import { format } from 'date-fns';
+
+const DATE_TIME_FORMAT = 'E MMM dd yyyy HH:mm:ss OOOO';
 
 interface TimeRangeSelectorProps {
-  id?: string;
+  start: number;
 }
 
-export const TimeRangeSelector = ({ id }: TimeRangeSelectorProps) => {
-  console.log('TimeRangeSelector -> id: ', id);
+export const TimeRangeSelector = ({ start }: TimeRangeSelectorProps) => {
+  const [startDate, setStartDate] = useState<string>(format(start, DATE_TIME_FORMAT));
 
-  // const [{ value }, , { setValue }] = timeModeProps;
+  // const [endDate, setEndDate] = useState<string>(
+  //   format(value.end, DATE_TIME_FORMAT)
+  // );
 
-  // const { setValue, setOptions } = useTemplateVariablesSetters();
+  const handleSelectStartDate = (start: string) => {
+    setStartDate(start);
+  };
 
-  const setValue = useCallback(
-    () => {
-      console.log('TimeRangeSelector -> setValue...');
-    },
-    []
-    // [setState, variableDefinitions]
-  );
+  // const handleSelectEndDate = (end: string) => {
+  //   setEndDate(end);
+  // };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      {/* <p>TODO: add TimeRangeSelector component</p> */}
+      <DatePicker
+        renderInput={(props) => <TextField {...props} />}
+        label="Start Date"
+        value={startDate}
+        onChange={(newValue) => {
+          const newDate = newValue ?? '1658153703847';
+          handleSelectStartDate(newDate);
+        }}
+      />
       <DateTimePicker
         renderInput={(props) => <TextField {...props} />}
-        label="DateTimePicker"
-        value={1658153703847}
+        label="Start Date / Time"
+        value={startDate}
         onChange={(newValue) => {
-          console.log(newValue);
-          // setValue(newValue);
-          setValue();
+          const newDate = newValue ?? '1658153703847';
+          handleSelectStartDate(newDate);
         }}
-        // onChange={(newValue) => {
-        //   setValue(newValue);
-        // }}
       />
     </LocalizationProvider>
   );
