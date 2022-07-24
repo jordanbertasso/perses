@@ -12,6 +12,7 @@ export function PageHeader<C extends React.ElementType = 'div'>(props: PageHeade
     <Box
       sx={combineSx(
         (theme) => ({
+          marginBottom: '12px',
           padding: theme.spacing(0, 2),
           // backgroundColor:
           //   theme.palette.mode === 'dark'

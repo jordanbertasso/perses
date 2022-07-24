@@ -26,7 +26,13 @@ function App() {
 
   // app specific echarts option overrides, empty since perses uses default
   // https://apache.github.io/echarts-handbook/en/concepts/style/#theme
-  const echartsThemeOverrides = {};
+  const echartsThemeOverrides = {
+    categoryAxis: {
+      splitLine: {
+        show: false,
+      },
+    },
+  };
   const chartsTheme = generateChartsTheme('perses', muiTheme, echartsThemeOverrides);
 
   return (
