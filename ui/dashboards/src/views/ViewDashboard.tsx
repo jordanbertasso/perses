@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, BoxProps, Stack, Typography } from '@mui/material';
-import { combineSx, TimeRangeSelector } from '@perses-dev/components';
+import { combineSx } from '@perses-dev/components';
 import { DashboardResource } from '@perses-dev/core';
 import { TimeRangeStateProvider, TemplateVariablesProvider } from '../context';
 import { Dashboard, VariableOptionsDrawer, PageHeader } from '../components';
@@ -62,7 +62,7 @@ export function ViewDashboard(props: ViewDashboardProps) {
                 {dashboardResource.metadata.name}
               </Typography>
               <Stack direction="row" spacing={1}>
-                <TimeRangeSelector start={new Date().getTime()} end={new Date().getTime()} />
+                {/* <TimeRangeSelector start={new Date().getTime()} end={new Date().getTime()} /> */}
               </Stack>
             </PageHeader>
             <Dashboard spec={dashboardResource.spec} />
