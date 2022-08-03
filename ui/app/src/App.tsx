@@ -11,23 +11,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { useMemo } from 'react';
 import { Box, useTheme } from '@mui/material';
-import { ErrorAlert, ChartsThemeProvider, generateChartsTheme } from '@perses-dev/components';
+import { ErrorAlert, ChartsThemeProvider, generateChartsTheme, PersesChartsTheme } from '@perses-dev/components';
 import { PluginRegistry, PluginBoundary } from '@perses-dev/plugin-system';
 import ViewDashboard from './views/ViewDashboard';
 import { DataSourceRegistry } from './context/DataSourceRegistry';
 import Header from './components/Header';
 import { useBundledPlugins } from './model/bundled-plugins';
 
+// app specific echarts option overrides, empty since perses uses default
+// https://apache.github.io/echarts-handbook/en/concepts/style/#theme
+const ECHARTS_THEME_OVERRIDES = {};
+
 function App() {
   const { getInstalledPlugins, importPluginModule } = useBundledPlugins();
 
   const muiTheme = useTheme();
-
-  // app specific echarts option overrides, empty since perses uses default
-  // https://apache.github.io/echarts-handbook/en/concepts/style/#theme
-  const echartsThemeOverrides = {};
-  const chartsTheme = generateChartsTheme('perses', muiTheme, echartsThemeOverrides);
+  const chartsTheme: PersesChartsTheme = useMemo(() => {
+    return generateChartsTheme('perses', muiTheme, ECHARTS_THEME_OVERRIDES);
+  }, [muiTheme]);
 
   return (
     <Box
