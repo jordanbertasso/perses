@@ -34,7 +34,7 @@ export LDFLAGS
 PROMU_VERSION     ?= 0.13.0
 PROMU_URL         := https://github.com/prometheus/promu/releases/download/v$(PROMU_VERSION)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM).tar.gz
 PREFIX      ?= $(shell pwd)/dist
-PROMU_PARALLEL    ?= 3
+PROMU_PARALLEL    ?= 1
 PROMU_THREAD      ?= 2
 PROMU             := $(GOPATH)/bin/promu
 
@@ -137,7 +137,7 @@ build-api: generate
 
 .PHONY: build-ui
 build-ui:
-	cd ./ui && npm install && npm run build
+	./scripts/build_ui.sh
 
 .PHONY: build-cli
 build-cli:
