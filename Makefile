@@ -16,6 +16,9 @@ CUE                   ?= cue
 GOCI                  ?= golangci-lint
 GOFMT                 ?= $(GO)fmt
 GOARCH                ?= amd64
+GOOS                  ?= $(shell $(GO) env GOOS)
+GO_BUILD_PLATFORM     ?= $(GOOS)-$(GOARCH)
+GOPATH                := $(firstword $(subst :, ,$(shell $(GO) env GOPATH)))
 COMMIT                := $(shell git rev-parse HEAD)
 DATE                  := $(shell date +%Y-%m-%d)
 BRANCH                := $(shell git rev-parse --abbrev-ref HEAD)
@@ -26,6 +29,24 @@ LDFLAGS               := -s -w -X ${PKG_LDFLAGS}.Version=${VERSION} -X ${PKG_LDF
 GORELEASER_PARALLEL   ?= 0
 
 export LDFLAGS
+
+# Promu install
+PROMU_VERSION     ?= 0.13.0
+PROMU_URL         := https://github.com/prometheus/promu/releases/download/v$(PROMU_VERSION)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM).tar.gz
+PREFIX      ?= $(shell pwd)/dist
+PROMU_PARALLEL    ?= 3
+PROMU_THREAD      ?= 2
+PROMU             := $(GOPATH)/bin/promu
+
+.PHONY: promu
+promu: $(PROMU)
+
+$(PROMU):
+	$(eval PROMU_TMP := $(shell mktemp -d))
+	curl -s -L $(PROMU_URL) | tar -xvzf - -C $(PROMU_TMP)
+	mkdir -p $(GOPATH)/bin
+	cp $(PROMU_TMP)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM)/promu $(GOPATH)/bin/promu
+	rm -r $(PROMU_TMP)
 
 all: clean build
 
@@ -96,13 +117,15 @@ coverage-html: integration-test
 	@echo ">> Print test coverage"
 	$(GO) tool cover -html=$(COVER_PROFILE)
 
+## Cross build binaries for all platforms (Use "make build" in development)
 .PHONY: cross-build
-cross-build: ## Cross build binaries for all platforms (Use "make build" in development)
-	goreleaser release --snapshot --rm-dist --parallelism ${GORELEASER_PARALLEL}
+cross-build: promu
+	@echo ">> building binaries"
+	$(PROMU) crossbuild -v --parallelism ${PROMU_PARALLEL} --parallelism-thread ${PROMU_THREAD}
 
 .PHONY: cross-release
 cross-release:
-	goreleaser release --rm-dist --parallelism ${GORELEASER_PARALLEL}
+	$(PROMU) release --rm-dist --parallelism ${GORELEASER_PARALLEL}
 
 .PHONY: build
 build: build-ui build-api build-cli
