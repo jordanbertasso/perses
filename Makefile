@@ -137,7 +137,7 @@ build-api: generate
 
 .PHONY: build-ui
 build-ui:
-	cd ./ui && npm install && npm run build
+	cd ./ui && npm install && ls node_modules/ && ls node_modules/.bin/ && npm run build
 
 .PHONY: build-cli
 build-cli:
