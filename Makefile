@@ -128,7 +128,7 @@ cross-release:
 	$(PROMU) release --rm-dist --parallelism ${GORELEASER_PARALLEL}
 
 .PHONY: build
-build: build-ui build-api build-cli
+build: build-api build-cli
 
 .PHONY: build-api
 build-api: generate
