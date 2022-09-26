@@ -1,12 +1,6 @@
 #!/bin/bash
 
-echo "${HOME}"
-
-if ! [[ -w  $HOME ]]
-then
-  echo "export npm cache config"
-  export npm_config_cache=$(mktemp -d)
-fi
+export npm_config_cache=$(mktemp -d)
 
 echo "${npm_config_cache}"
 
