@@ -146,6 +146,7 @@ build-cli:
 
 .PHONY: generate
 generate:
+	$(GO) env
 	$(GO) generate ./internal/api
 	$(GO) generate ./internal/api/front
 
