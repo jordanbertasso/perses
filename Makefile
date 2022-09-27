@@ -18,7 +18,7 @@ GOFMT                 ?= $(GO)fmt
 GOARCH                ?= amd64
 GOOS                  ?= $(shell $(GO) env GOOS)
 GO_BUILD_PLATFORM     ?= $(GOOS)-$(GOARCH)
-GOPATH                := $(firstword $(subst :, ,$(shell $(GO) env GOPATH)))
+FIRST_GOPATH          := $(firstword $(subst :, ,$(shell $(GO) env GOPATH)))
 COMMIT                := $(shell git rev-parse HEAD)
 DATE                  := $(shell date +%Y-%m-%d)
 BRANCH                := $(shell git rev-parse --abbrev-ref HEAD)
@@ -33,10 +33,10 @@ export LDFLAGS
 # Promu install
 PROMU_VERSION     ?= 0.13.0
 PROMU_URL         := https://github.com/prometheus/promu/releases/download/v$(PROMU_VERSION)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM).tar.gz
-PREFIX      ?= $(shell pwd)/dist
+PREFIX            ?= $(shell pwd)/dist
 PROMU_PARALLEL    ?= 1
 PROMU_THREAD      ?= 2
-PROMU             := $(GOPATH)/bin/promu
+PROMU             := $(FIRST_GOPATH)/bin/promu
 
 .PHONY: promu
 promu: $(PROMU)
@@ -44,8 +44,8 @@ promu: $(PROMU)
 $(PROMU):
 	$(eval PROMU_TMP := $(shell mktemp -d))
 	curl -s -L $(PROMU_URL) | tar -xvzf - -C $(PROMU_TMP)
-	mkdir -p $(GOPATH)/bin
-	cp $(PROMU_TMP)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM)/promu $(GOPATH)/bin/promu
+	mkdir -p $(FIRST_GOPATH)/bin
+	cp $(PROMU_TMP)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM)/promu $(FIRST_GOPATH)/bin/promu
 	rm -r $(PROMU_TMP)
 
 all: clean build
