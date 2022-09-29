@@ -125,10 +125,6 @@ cross-build: promu
 	@echo ">> building binaries"
 	$(PROMU) crossbuild -v --parallelism ${PROMU_PARALLEL} --parallelism-thread ${PROMU_THREAD}
 
-.PHONY: cross-release
-cross-release:
-	$(PROMU) release --rm-dist --parallelism ${GORELEASER_PARALLEL}
-
 .PHONY: build
 build: build-api build-cli
 

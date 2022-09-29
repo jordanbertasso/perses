@@ -3,15 +3,6 @@ on:
   pull_request:
   push:
 jobs:
-  build:
-    name: Build Perses for all architectures
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        thread: [ 0, 1, 2 ]
-    steps:
-    - uses: actions/checkout@v3
-    - run : PROMU_PARALLEL=3 PROMU_THREAD=${{ matrix.thread }} make cross-build
   checklicense:
     name: "check license headers"
     runs-on: ubuntu-latest
