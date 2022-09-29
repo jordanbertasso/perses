@@ -15,8 +15,10 @@ GO                    ?= go
 CUE                   ?= cue
 GOCI                  ?= golangci-lint
 GOFMT                 ?= $(GO)fmt
-GOARCH                ?= amd64
 GOOS                  ?= $(shell $(GO) env GOOS)
+GOARCH                ?= $(shell $(GO) env GOARCH)
+GOHOSTOS              ?= $(shell $(GO) env GOHOSTOS)
+GOHOSTARCH            ?= $(shell $(GO) env GOHOSTARCH)
 GO_BUILD_PLATFORM     ?= $(GOOS)-$(GOARCH)
 FIRST_GOPATH          := $(firstword $(subst :, ,$(shell $(GO) env GOPATH)))
 COMMIT                := $(shell git rev-parse HEAD)
@@ -133,7 +135,7 @@ build: build-api build-cli
 .PHONY: build-api
 build-api: generate
 	@echo ">> build the perses api"
-	CGO_ENABLED=0 GOARCH=${GOARCH} $(GO) build -ldflags "${LDFLAGS}" -o ./bin/perses ./cmd/perses
+	CGO_ENABLED=0 GOARCH=${GOARCH} GOOS=${GOOS} $(GO) build -ldflags "${LDFLAGS}" -o ./bin/perses ./cmd/perses
 
 .PHONY: build-ui
 build-ui:
@@ -142,13 +144,12 @@ build-ui:
 .PHONY: build-cli
 build-cli:
 	@echo ">> build the perses cli"
-	CGO_ENABLED=0 GOARCH=${GOARCH} $(GO) build -ldflags "${LDFLAGS}" -o ./bin/percli ./cmd/percli
+	CGO_ENABLED=0 GOARCH=${GOARCH} GOOS=${GOOS} $(GO) build -ldflags "${LDFLAGS}" -o ./bin/percli ./cmd/percli
 
 .PHONY: generate
 generate:
-	$(GO) env
-	$(GO) generate ./internal/api
-	$(GO) generate ./internal/api/front
+	GOARCH=${GOHOSTARCH} GOOS=${GOHOSTOS} $(GO) generate ./internal/api
+	GOARCH=${GOHOSTARCH} GOOS=${GOHOSTOS} $(GO) generate ./internal/api/front
 
 .PHONY: clean
 clean:
