@@ -131,13 +131,27 @@ const demoDashboard: DashboardResource = {
                     plugin: {
                       kind: 'PrometheusTimeSeriesQuery',
                       spec: {
-                        query:
-                          '1 - node_filesystem_free_bytes{job="node",instance="$instance",fstype!="rootfs",mountpoint!~"/(run|var).*",mountpoint!=""} / node_filesystem_size_bytes{job="node",instance="$instance"}',
+                        query: 'node_load15{instance="demo.do.prometheus.io:9100",job="node"}',
+                        // query: 'node_load15{instance="$instance",job="node"}',
                       },
                     },
                   },
                 },
               ],
+              // queries: [
+              //   {
+              //     kind: 'TimeSeriesQuery',
+              //     spec: {
+              //       plugin: {
+              //         kind: 'PrometheusTimeSeriesQuery',
+              //         spec: {
+              //           query:
+              //             '1 - node_filesystem_free_bytes{job="node",instance="$instance",fstype!="rootfs",mountpoint!~"/(run|var).*",mountpoint!=""} / node_filesystem_size_bytes{job="node",instance="$instance"}',
+              //         },
+              //       },
+              //     },
+              //   },
+              // ],
               unit: { kind: 'Percent' },
             },
           },
@@ -573,19 +587,19 @@ const demoDashboard: DashboardResource = {
           display: {
             title: 'Row 1',
             collapse: {
-              open: false,
+              open: true,
             },
           },
           items: [
-            {
-              x: 0,
-              y: 0,
-              width: 12,
-              height: 6,
-              content: { $ref: '#/spec/panels/legendEx' },
-              // content: { $ref: '#/spec/panels/seriesTestAlt' },
-              // content: { $ref: '#/spec/panels/seriesTest' },
-            },
+            // {
+            //   x: 0,
+            //   y: 0,
+            //   width: 12,
+            //   height: 6,
+            //   content: { $ref: '#/spec/panels/legendEx' },
+            //   // content: { $ref: '#/spec/panels/seriesTestAlt' },
+            //   // content: { $ref: '#/spec/panels/seriesTest' },
+            // },
             {
               x: 12,
               y: 0,
@@ -602,7 +616,7 @@ const demoDashboard: DashboardResource = {
           display: {
             title: 'Row 2',
             collapse: {
-              open: true,
+              open: false,
             },
           },
           items: [
