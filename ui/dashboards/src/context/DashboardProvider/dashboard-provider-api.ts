@@ -11,18 +11,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { UnknownSpec } from '@perses-dev/core';
-import { InitialOptionsCallback, OptionsEditor } from './visual-editing';
+import { useDashboardStore } from './DashboardProvider';
 
-/**
- * Plugin that defines options for an external system that Perses talks to for data.
- */
-export interface DatasourcePlugin<Spec = UnknownSpec, Client = unknown> {
-  createClient: (spec: Spec, options: DatasourceClientOptions) => Client;
-  OptionsEditorComponent: OptionsEditor<Spec>;
-  createInitialOptions: InitialOptionsCallback<Spec>;
+export function useLayouts() {
+  return useDashboardStore(({ layouts, addPanelToGroup, movePanelToGroup, updatePanelGroup, swapPanelGroups }) => ({
+    layouts,
+    addPanelToGroup,
+    movePanelToGroup,
+    updatePanelGroup,
+    swapPanelGroups,
+  }));
 }
 
-export interface DatasourceClientOptions {
-  proxyUrl?: string;
+export function usePanels() {
+  return useDashboardStore(({ panels, panelEditor, addPanel, editPanel }) => ({
+    panels,
+    panelEditor,
+    addPanel,
+    editPanel,
+  }));
+}
+
+export function useDefaultTimeRange() {
+  return useDashboardStore((state) => state.defaultTimeRange);
 }

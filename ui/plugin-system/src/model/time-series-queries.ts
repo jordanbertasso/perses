@@ -11,14 +11,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AbsoluteTimeRange, UnixTimeMs } from '@perses-dev/core';
+import { AbsoluteTimeRange, UnixTimeMs, UnknownSpec } from '@perses-dev/core';
 import { DatasourceStore, VariableStateMap } from '../runtime';
+import { InitialOptionsCallback, OptionsEditor } from './visual-editing';
 
 /**
- * A plugin for running graph queries.
+ * A plugin for running time series queries.
  */
-export interface TimeSeriesQueryPlugin<Spec = unknown> {
+export interface TimeSeriesQueryPlugin<Spec = UnknownSpec> {
   getTimeSeriesData: (spec: Spec, ctx: TimeSeriesQueryContext) => Promise<TimeSeriesData>;
+  OptionsEditorComponent: OptionsEditor<Spec>;
+  createInitialOptions: InitialOptionsCallback<Spec>;
 }
 
 /**

@@ -12,11 +12,31 @@
 // limitations under the License.
 
 import { Box } from '@mui/material';
-import { PanelProps } from '@perses-dev/plugin-system';
-import { EmptyChartOptions } from './empty-chart-model';
+import { PanelEditorValues } from '../../context/DashboardProvider/panel-editing-slice';
+import { Panel, PanelProps } from '../Panel';
 
-export type EmptyChartPanelProps = PanelProps<EmptyChartOptions>;
+export function PanelPreview({ name, description, kind, spec, groupIndex }: PanelEditorValues) {
+  const previewValues: PanelProps = {
+    definition: {
+      kind: 'Panel',
+      spec: {
+        display: {
+          name,
+          description,
+        },
+        plugin: {
+          kind,
+          spec,
+        },
+      },
+    },
+    groupIndex,
+    itemIndex: 0, // TODO: what should itemIndex be?
+  };
 
-export function EmptyChartPanel() {
-  return <Box sx={{ overflow: 'hidden' }}>EmptyChart</Box>;
+  return (
+    <Box height={300}>
+      <Panel {...previewValues} />
+    </Box>
+  );
 }

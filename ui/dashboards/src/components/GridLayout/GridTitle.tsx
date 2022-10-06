@@ -11,13 +11,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { useState } from 'react';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import ExpandedIcon from 'mdi-material-ui/ChevronUp';
 import CollapsedIcon from 'mdi-material-ui/ChevronDown';
 import AddIcon from 'mdi-material-ui/Plus';
 import PencilIcon from 'mdi-material-ui/PencilOutline';
-import { useState } from 'react';
-import { useDashboardApp, useEditMode } from '../../context';
+import ArrowUpIcon from 'mdi-material-ui/ArrowUp';
+import ArrowDownIcon from 'mdi-material-ui/ArrowDown';
+import DeleteIcon from 'mdi-material-ui/DeleteOutline';
+
+import { useDashboardApp, useEditMode, useLayouts, usePanels } from '../../context';
 
 export interface GridTitleProps {
   groupIndex: number;
@@ -36,8 +40,10 @@ export function GridTitle(props: GridTitleProps) {
   const { groupIndex, title, collapse } = props;
 
   const [isHovered, setIsHovered] = useState(false);
-  const { openPanelDrawer, openPanelGroupDialog } = useDashboardApp();
+  const { openPanelGroupDialog } = useDashboardApp();
+  const { addPanel } = usePanels();
   const { isEditMode } = useEditMode();
+  const { layouts, swapPanelGroups } = useLayouts();
 
   const text = (
     <Typography variant="h2" sx={{ marginLeft: collapse !== undefined ? 1 : undefined }}>
@@ -65,11 +71,25 @@ export function GridTitle(props: GridTitleProps) {
           {text}
           {isEditMode && isHovered && (
             <Stack direction="row" sx={{ marginLeft: 'auto' }}>
-              <IconButton onClick={() => openPanelDrawer({ groupIndex })}>
+              <IconButton onClick={() => addPanel(groupIndex)}>
                 <AddIcon />
               </IconButton>
               <IconButton onClick={() => openPanelGroupDialog(groupIndex)}>
                 <PencilIcon />
+              </IconButton>
+              <IconButton>
+                <DeleteIcon />
+              </IconButton>
+
+              <IconButton
+                disabled={groupIndex === layouts.length - 1}
+                onClick={() => swapPanelGroups(groupIndex, groupIndex + 1)}
+              >
+                <ArrowDownIcon />
+              </IconButton>
+
+              <IconButton disabled={groupIndex === 0} onClick={() => swapPanelGroups(groupIndex, groupIndex - 1)}>
+                <ArrowUpIcon />
               </IconButton>
             </Stack>
           )}

@@ -11,18 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { UnknownSpec } from '@perses-dev/core';
-import { InitialOptionsCallback, OptionsEditor } from './visual-editing';
-
 /**
- * Plugin that defines options for an external system that Perses talks to for data.
+ * The middleware applied to the DashboardStore (can be used as generic argument in StateCreator).
  */
-export interface DatasourcePlugin<Spec = UnknownSpec, Client = unknown> {
-  createClient: (spec: Spec, options: DatasourceClientOptions) => Client;
-  OptionsEditorComponent: OptionsEditor<Spec>;
-  createInitialOptions: InitialOptionsCallback<Spec>;
-}
-
-export interface DatasourceClientOptions {
-  proxyUrl?: string;
-}
+export type Middleware = [['zustand/immer', never], ['zustand/devtools', never]];

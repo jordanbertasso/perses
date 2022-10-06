@@ -11,17 +11,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { OptionsEditorProps, usePlugin } from '@perses-dev/plugin-system';
+import { UnknownSpec } from '@perses-dev/core';
+import { OptionsEditorProps } from '../model/visual-editing';
+import { usePlugin } from './plugins';
 
-export interface PanelSpecEditorProps extends OptionsEditorProps<unknown> {
-  panelPluginKind: string;
+export interface PluginSpecEditorProps extends OptionsEditorProps<UnknownSpec> {
+  pluginType: 'Panel' | 'TimeSeriesQuery';
+  pluginKind: string;
 }
 
-export function PanelSpecEditor(props: PanelSpecEditorProps) {
-  const { panelPluginKind, ...others } = props;
-  const { data: plugin, isLoading } = usePlugin('Panel', panelPluginKind, {
+export function PluginSpecEditor(props: PluginSpecEditorProps) {
+  const { pluginType, pluginKind, ...others } = props;
+  const { data: plugin, isLoading } = usePlugin(pluginType, pluginKind, {
     useErrorBoundary: true,
-    enabled: panelPluginKind !== '',
+    enabled: pluginKind !== '',
   });
 
   // TODO: Proper loading indicator
@@ -30,7 +33,7 @@ export function PanelSpecEditor(props: PanelSpecEditorProps) {
   }
 
   if (plugin === undefined) {
-    throw new Error(`Missing OptionsEditorComponent for Panel plugin with kind '${panelPluginKind}'`);
+    throw new Error(`Missing OptionsEditorComponent for ${pluginType} plugin with kind '${pluginKind}'`);
   }
 
   const { OptionsEditorComponent } = plugin;
