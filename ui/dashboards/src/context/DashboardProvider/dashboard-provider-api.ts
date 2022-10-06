@@ -32,6 +32,6 @@ export function usePanels() {
   }));
 }
 
-export function useDefaultTimeRange() {
-  return useDashboardStore((state) => state.defaultTimeRange);
+export function useDefaultDuration() {
+  return useDashboardStore((state) => state.defaultDuration);
 }

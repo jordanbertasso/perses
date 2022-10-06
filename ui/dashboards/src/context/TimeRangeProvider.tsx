@@ -23,7 +23,6 @@ import {
   DurationString,
 } from '@perses-dev/core';
 import { TimeRange, TimeRangeContext, useQueryString } from '@perses-dev/plugin-system';
-import { useDashboard } from './DashboardProvider';
 
 export interface TimeRangeProviderProps {
   initialTimeRange: TimeRangeValue;
@@ -58,8 +57,6 @@ export function useInitialTimeRange(dashboardDuration: DurationString) {
  */
 export function useSyncTimeRangeParams(selectedTimeRange: TimeRangeValue) {
   const { queryString, setQueryString } = useQueryString();
-  const { dashboard } = useDashboard();
-  const dashboardDuration = dashboard.duration;
   const lastParamSync = useRef<{ [param: string]: string }>();
 
   useEffect(() => {
@@ -85,7 +82,7 @@ export function useSyncTimeRangeParams(selectedTimeRange: TimeRangeValue) {
         }
       }
     }
-  }, [selectedTimeRange, dashboardDuration, queryString, setQueryString]);
+  }, [selectedTimeRange, queryString, setQueryString]);
 }
 
 /**

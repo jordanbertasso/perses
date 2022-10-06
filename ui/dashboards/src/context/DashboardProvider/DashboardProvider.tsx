@@ -23,7 +23,7 @@ import { createLayoutSlice, LayoutSlice } from './layout-slice';
 import { createPanelEditorSlice, PanelEditorSlice } from './panel-editing-slice';
 
 export interface DashboardStoreState extends DashboardAppSlice, LayoutSlice, PanelEditorSlice {
-  defaultTimeRange: DurationString;
+  defaultDuration: DurationString;
   isEditMode: boolean;
   setEditMode: (isEditMode: boolean) => void;
 }
@@ -68,7 +68,7 @@ export function DashboardProvider(props: DashboardProviderProps) {
           ...createDashboardAppSlice(...args),
           ...createLayoutSlice(layouts)(...args),
           ...createPanelEditorSlice(panels)(...args),
-          defaultTimeRange: dashboardSpec.duration,
+          defaultDuration: dashboardSpec.duration,
           isEditMode: !!isEditMode,
           setEditMode: (isEditMode: boolean) => set({ isEditMode }),
         };
