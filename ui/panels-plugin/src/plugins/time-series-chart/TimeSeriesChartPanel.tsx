@@ -15,11 +15,12 @@ import { PanelProps, useTimeSeriesQueries, useTimeRange } from '@perses-dev/plug
 import { useMemo } from 'react';
 import { GridComponentOption } from 'echarts';
 import { Box, Skeleton } from '@mui/material';
-import { LineChart, EChartsDataFormat, ZoomEventData } from '@perses-dev/components';
+import { LineChart, EChartsDataFormat, ZoomEventData, ListLegend, ListLegendItem } from '@perses-dev/components';
 import { useSuggestedStepMs } from '../../model/time';
 import { StepOptions, ThresholdColors, ThresholdColorsPalette } from '../../model/thresholds';
 import { TimeSeriesChartOptions } from './time-series-chart-model';
 import { getLineSeries, getCommonTimeScale, getYValues, getXValues } from './utils/data-transform';
+import { getRandomColor } from './utils/palette-gen';
 
 export const EMPTY_GRAPH_DATA = {
   timeSeries: [],
@@ -38,6 +39,8 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     kind: 'Decimal',
     decimal_places: 2,
   };
+
+  const legendItems: ListLegendItem[] = [];
 
   const suggestedStepMs = useSuggestedStepMs(contentDimensions?.width);
   const queryResults = useTimeSeriesQueries(queries, { suggestedStepMs });
@@ -70,6 +73,15 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         const yValues = getYValues(timeSeries, timeScale);
         const lineSeries = getLineSeries(timeSeries.name, yValues);
         graphData.timeSeries.push(lineSeries);
+        legendItems.push({
+          id: timeSeries.name,
+          // label: JSON.stringify(timeSeries.values),
+          // label: timeSeries.values,
+          label: timeSeries.name,
+          isSelected: false,
+          color: getRandomColor(timeSeries.name),
+          // onClick: () => {}, // TODO (sjcobb): add filter data function
+        });
       }
       queriesFinished++;
     }
@@ -130,13 +142,9 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   };
 
   return (
-    <LineChart
-      height={contentDimensions.height}
-      data={graphData}
-      unit={unit}
-      legend={legendOverrides}
-      grid={gridOverrides}
-      onDataZoom={handleDataZoom}
-    />
+    <>
+      {/* <LineChart height={height - 50} data={graphData} unit={unit} grid={gridOverrides} onDataZoom={handleDataZoom} /> */}
+      {<ListLegend height={100} width={500} items={legendItems} />}
+    </>
   );
 }

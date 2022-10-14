@@ -17,6 +17,7 @@ export * from './ErrorAlert';
 export * from './ErrorBoundary';
 export * from './InfoTooltip';
 export * from './LineChart';
+export * from './ListLegend';
 export * from './GaugeChart';
 export * from './StatChart';
 export * from './TimeRangeSelector';
