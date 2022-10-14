@@ -11,19 +11,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import { Box, ListItemText, ListItem, BoxProps } from '@mui/material';
 import { combineSx } from '../utils';
 interface ListLegendItemProps {
   item: ListLegendItem;
+  // onLegendItemClick: MouseEventHandler<HTMLLIElement>;
 }
 
+// https://github.com/sumeete/perses/blob/sjcobb/legend-debug/ui/components/src/ListLegend/ListLegendItem.tsx#L13
 export interface ListLegendItem {
   id: string;
   label: string;
   isSelected: boolean;
   color: string;
-  onClick?: React.MouseEventHandler<HTMLLIElement>;
+  onClick: MouseEventHandler<HTMLLIElement>;
 }
 
 export const ListLegendItem = React.memo(function ListLegendItem({ item }: ListLegendItemProps) {
@@ -33,8 +35,7 @@ export const ListLegendItem = React.memo(function ListLegendItem({ item }: ListL
       sx={{
         display: 'flex',
         maxWidth: 400,
-        paddingTop: 0,
-        paddingBottom: 0,
+        padding: 0,
         cursor: 'pointer',
       }}
       key={item.id}

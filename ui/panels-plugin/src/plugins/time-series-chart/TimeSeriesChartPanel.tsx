@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { useMemo, useState, MouseEvent } from 'react';
 import { PanelProps, useTimeSeriesQueries, useTimeRange } from '@perses-dev/plugin-system';
-import { useMemo } from 'react';
 import { GridComponentOption } from 'echarts';
 import { Box, Skeleton } from '@mui/material';
 import { LineChart, EChartsDataFormat, ZoomEventData, ListLegend } from '@perses-dev/components';
@@ -25,6 +25,7 @@ import { getRandomColor } from './utils/palette-gen';
 export const EMPTY_GRAPH_DATA = {
   timeSeries: [],
   xAxis: [],
+  legendItems: [],
 };
 
 export type TimeSeriesChartProps = PanelProps<TimeSeriesChartOptions>;
@@ -39,6 +40,8 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     kind: 'Decimal',
     decimal_places: 2,
   };
+
+  const [selectedSeriesName, setSelectedSeriesName] = useState<string>();
 
   const suggestedStepMs = useSuggestedStepMs(contentDimensions?.width);
   const queryResults = useTimeSeriesQueries(queries, { suggestedStepMs });
@@ -67,6 +70,11 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     };
     const xAxisData = [...getXValues(timeScale)];
 
+    const onLegendItemClick = (e: MouseEvent, seriesName: string) => {
+      console.log('onLegendItemClick -> e: ', e);
+      setSelectedSeriesName(seriesName);
+    };
+
     let queriesFinished = 0;
     for (const query of queryResults) {
       // Skip queries that are still loading and don't have data
@@ -74,17 +82,15 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
 
       for (const timeSeries of query.data.series) {
         const yValues = getYValues(timeSeries, timeScale);
-        const lineSeries = getLineSeries(timeSeries.name, yValues);
+        const lineSeries = getLineSeries(timeSeries.name, yValues, undefined, selectedSeriesName);
         graphData.timeSeries.push(lineSeries);
-        if (graphData.legendItems !== undefined) {
+        if (show_legend && graphData.legendItems) {
           graphData.legendItems.push({
             id: timeSeries.name,
-            // label: JSON.stringify(timeSeries.values),
-            // label: timeSeries.values,
             label: timeSeries.name,
             isSelected: false,
             color: getRandomColor(timeSeries.name),
-            // onClick: () => {}, // TODO (sjcobb): add filter data function
+            onClick: (e) => onLegendItemClick(e, timeSeries.name),
           });
         }
       }
@@ -113,7 +119,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       loading: queriesFinished === 0,
       allQueriesLoaded: queriesFinished === queryResults.length,
     };
-  }, [queryResults, thresholds]);
+  }, [queryResults, thresholds, selectedSeriesName, show_legend]);
 
   if (contentDimensions === undefined) {
     return null;
@@ -132,7 +138,6 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   }
 
   const gridOverrides: GridComponentOption = {
-    // bottom: show_legend === true ? 40 : 0,
     bottom: show_legend === true ? 0 : 0,
   };
 
@@ -149,14 +154,18 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       }}
     >
       <LineChart
-        // // height={contentDimensions.height - 25}
-        height={contentDimensions.height - 60}
+        height={
+          graphData.legendItems && graphData.legendItems.length > 0
+            ? contentDimensions.height - 40
+            : contentDimensions.height
+        }
         data={graphData}
         unit={unit}
         grid={gridOverrides}
         onDataZoom={handleDataZoom}
       />
-      {show_legend && <ListLegend items={graphData.legendItems} />}
+      {/* {show_legend && <ListLegend items={graphData.legendItems} onClick={handleOnLegendClick} />} */}
+      {show_legend && graphData.legendItems && <ListLegend items={graphData.legendItems} />}
     </Box>
   );
 }

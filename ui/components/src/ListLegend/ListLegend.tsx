@@ -25,7 +25,7 @@ export function ListLegend({ items }: ListLegendProps) {
         display: 'flex',
         flexWrap: 'wrap',
         alignItem: 'flex-start',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-around',
       }}
     >
       {items.map((item) => (
