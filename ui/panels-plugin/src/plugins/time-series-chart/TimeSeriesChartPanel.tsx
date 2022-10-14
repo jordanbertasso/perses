@@ -15,7 +15,7 @@ import { PanelProps, useTimeSeriesQueries, useTimeRange } from '@perses-dev/plug
 import { useMemo } from 'react';
 import { GridComponentOption } from 'echarts';
 import { Box, Skeleton } from '@mui/material';
-import { LineChart, EChartsDataFormat, ZoomEventData, ListLegend, ListLegendItem } from '@perses-dev/components';
+import { LineChart, EChartsDataFormat, ZoomEventData, ListLegend } from '@perses-dev/components';
 import { useSuggestedStepMs } from '../../model/time';
 import { StepOptions, ThresholdColors, ThresholdColorsPalette } from '../../model/thresholds';
 import { TimeSeriesChartOptions } from './time-series-chart-model';
@@ -40,8 +40,6 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     decimal_places: 2,
   };
 
-  const legendItems: ListLegendItem[] = [];
-
   const suggestedStepMs = useSuggestedStepMs(contentDimensions?.width);
   const queryResults = useTimeSeriesQueries(queries, { suggestedStepMs });
 
@@ -61,7 +59,12 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       };
     }
 
-    const graphData: EChartsDataFormat = { timeSeries: [], xAxis: [], rangeMs: timeScale.endMs - timeScale.startMs };
+    const graphData: EChartsDataFormat = {
+      timeSeries: [],
+      xAxis: [],
+      legendItems: [],
+      rangeMs: timeScale.endMs - timeScale.startMs,
+    };
     const xAxisData = [...getXValues(timeScale)];
 
     let queriesFinished = 0;
@@ -73,15 +76,17 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         const yValues = getYValues(timeSeries, timeScale);
         const lineSeries = getLineSeries(timeSeries.name, yValues);
         graphData.timeSeries.push(lineSeries);
-        legendItems.push({
-          id: timeSeries.name,
-          // label: JSON.stringify(timeSeries.values),
-          // label: timeSeries.values,
-          label: timeSeries.name,
-          isSelected: false,
-          color: getRandomColor(timeSeries.name),
-          // onClick: () => {}, // TODO (sjcobb): add filter data function
-        });
+        if (graphData.legendItems !== undefined) {
+          graphData.legendItems.push({
+            id: timeSeries.name,
+            // label: JSON.stringify(timeSeries.values),
+            // label: timeSeries.values,
+            label: timeSeries.name,
+            isSelected: false,
+            color: getRandomColor(timeSeries.name),
+            // onClick: () => {}, // TODO (sjcobb): add filter data function
+          });
+        }
       }
       queriesFinished++;
     }
@@ -126,14 +131,9 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     );
   }
 
-  const legendOverrides = {
-    show: show_legend === true,
-    type: 'scroll',
-    bottom: 0,
-  };
-
   const gridOverrides: GridComponentOption = {
-    bottom: show_legend === true ? 35 : 0,
+    // bottom: show_legend === true ? 40 : 0,
+    bottom: show_legend === true ? 0 : 0,
   };
 
   const handleDataZoom = (event: ZoomEventData) => {
@@ -142,9 +142,21 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   };
 
   return (
-    <>
-      {/* <LineChart height={height - 50} data={graphData} unit={unit} grid={gridOverrides} onDataZoom={handleDataZoom} /> */}
-      {<ListLegend height={100} width={500} items={legendItems} />}
-    </>
+    <Box
+      sx={{
+        height: contentDimensions.height,
+        overflowY: 'scroll',
+      }}
+    >
+      <LineChart
+        // // height={contentDimensions.height - 25}
+        height={contentDimensions.height - 60}
+        data={graphData}
+        unit={unit}
+        grid={gridOverrides}
+        onDataZoom={handleDataZoom}
+      />
+      {show_legend && <ListLegend items={graphData.legendItems} />}
+    </Box>
   );
 }

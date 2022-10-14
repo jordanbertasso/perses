@@ -12,6 +12,7 @@
 // limitations under the License.
 
 import { LineSeriesOption } from 'echarts/charts';
+import { ListLegendItem } from '../ListLegend';
 
 export const PROGRESSIVE_MODE_SERIES_LIMIT = 500;
 
@@ -34,6 +35,7 @@ export interface EChartsTimeSeries extends Omit<LineSeriesOption, 'data'> {
 export type EChartsDataFormat = {
   timeSeries: EChartsTimeSeries[];
   xAxis: number[];
+  legendItems: ListLegendItem[];
   xAxisMax?: number | string;
   rangeMs?: number;
 };

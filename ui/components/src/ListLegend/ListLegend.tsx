@@ -15,18 +15,17 @@ import { List } from '@mui/material';
 import { ListLegendItem } from './ListLegendItem';
 
 interface ListLegendProps {
-  height: number;
-  width: number;
   items: ListLegendItem[];
 }
 
-export function ListLegend({ items, height, width }: ListLegendProps) {
+export function ListLegend({ items }: ListLegendProps) {
   return (
     <List
       sx={{
-        height: height,
-        width: width,
-        overflow: 'auto',
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItem: 'flex-start',
+        justifyContent: 'flex-start',
       }}
     >
       {items.map((item) => (
