@@ -146,7 +146,7 @@ const demoDashboard: DashboardResource = {
                   },
                 },
               ],
-              unit: { kind: 'Percent' },
+              unit: { kind: 'PercentDecimal', decimal_places: 0 },
               legend: {
                 show: true,
                 position: 'right',
@@ -239,7 +239,9 @@ const demoDashboard: DashboardResource = {
                   },
                 },
               ],
-              show_legend: false,
+              legend: {
+                show: false,
+              },
               unit: {
                 kind: 'PercentDecimal',
                 decimal_places: 1,
@@ -269,7 +271,9 @@ const demoDashboard: DashboardResource = {
                   },
                 },
               ],
-              show_legend: false,
+              // legend: {
+              //   show: true,
+              // },
               unit: {
                 kind: 'PercentDecimal',
                 decimal_places: 1,
@@ -318,7 +322,9 @@ const demoDashboard: DashboardResource = {
                 kind: 'Decimal',
                 decimal_places: 2,
               },
-              show_legend: true,
+              legend: {
+                show: true,
+              },
             },
           },
         },

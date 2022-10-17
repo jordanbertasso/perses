@@ -212,7 +212,9 @@ const benchmarkDashboard: DashboardResource = {
                   },
                 },
               ],
-              show_legend: true,
+              legend: {
+                show: true,
+              },
               unit: { kind: 'Bytes' },
             },
           },
@@ -249,7 +251,6 @@ const benchmarkDashboard: DashboardResource = {
                   },
                 },
               ],
-              show_legend: false,
               unit: {
                 kind: 'PercentDecimal',
                 decimal_places: 1,
@@ -298,7 +299,9 @@ const benchmarkDashboard: DashboardResource = {
                 kind: 'Decimal',
                 decimal_places: 2,
               },
-              show_legend: true,
+              legend: {
+                show: true,
+              },
             },
           },
         },

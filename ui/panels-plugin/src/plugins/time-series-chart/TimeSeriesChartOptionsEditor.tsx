@@ -12,21 +12,34 @@
 // limitations under the License.
 
 import { produce } from 'immer';
-// import { useImmer } from 'use-immer';
-import { Grid, Stack, Box, Typography, Switch } from '@mui/material';
+import {
+  Grid,
+  Stack,
+  Box,
+  Typography,
+  Switch,
+  MenuItem,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  Select,
+} from '@mui/material';
 import { TimeSeriesQueryDefinition } from '@perses-dev/core';
 import { OptionsEditorProps, TimeSeriesQueryEditor } from '@perses-dev/plugin-system';
 import { TimeSeriesChartOptions } from './time-series-chart-model';
 
 export type TimeSeriesChartOptionsEditorProps = OptionsEditorProps<TimeSeriesChartOptions>;
 
+// TODO: reorg supported options
+const legendPositionValues = ['bottom', 'right'] as const;
+
+type LegendPositionOptions = {
+  position: typeof legendPositionValues[number];
+};
+
 export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditorProps) {
   const { onChange, value } = props;
   const { queries } = value;
-  // const { queries, legend } = value;
-
-  // // const [legendState, setLegendState] = useImmer(getInitialState(initialVariableDefinition));
-  // const [legendState, setLegendState] = useImmer(legend);
 
   const handleQueryChange = (index: number, queryDef: TimeSeriesQueryDefinition) => {
     onChange(
@@ -44,6 +57,14 @@ export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditor
     );
   }
 
+  function updateLegendPosition(position: LegendPositionOptions['position']) {
+    onChange(
+      produce(value, (draft: TimeSeriesChartOptions) => {
+        draft.legend.position = position;
+      })
+    );
+  }
+
   return (
     <Stack spacing={1}>
       {/* TODO: Deal with user deleting all queries */}
@@ -57,14 +78,40 @@ export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditor
       ))}
       <Grid container spacing={1} mb={1}>
         <Grid item xs={12}>
-          Show Legend
-          <Switch
-            checked={value.legend.show}
-            onChange={(e) => {
-              console.log(e);
-              updateLegendShow(e.target.checked);
-            }}
+          <Typography variant="overline" component="h3">
+            Legend
+          </Typography>
+          <FormControlLabel
+            label="Show"
+            control={
+              <Switch
+                checked={value.legend.show}
+                onChange={(e) => {
+                  updateLegendShow(e.target.checked);
+                }}
+              />
+            }
           />
+        </Grid>
+        <Grid>
+          <FormControl fullWidth>
+            <InputLabel id="legend-position-select-label">Position</InputLabel>
+            <Select
+              labelId="legend-position-select-label"
+              id="legend-position-select"
+              label="Position"
+              value={value.legend.position}
+              onChange={(e) => {
+                updateLegendPosition(e.target.value as LegendPositionOptions['position']);
+              }}
+            >
+              {legendPositionValues.map((v) => (
+                <MenuItem key={v} value={v}>
+                  {v}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
     </Stack>

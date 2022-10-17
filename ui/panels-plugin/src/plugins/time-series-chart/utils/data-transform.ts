@@ -24,9 +24,15 @@ export interface TimeScale {
   stepMs: number;
 }
 
+export type RunningQueriesState = ReturnType<typeof useTimeSeriesQueries>;
+
 export const OPTIMIZED_MODE_SERIES_LIMIT = 500;
 
-export type RunningQueriesState = ReturnType<typeof useTimeSeriesQueries>;
+export const EMPTY_GRAPH_DATA = {
+  timeSeries: [],
+  xAxis: [],
+  legendItems: [],
+};
 
 /**
  * Given a list of running queries, calculates a common time scale for use on
