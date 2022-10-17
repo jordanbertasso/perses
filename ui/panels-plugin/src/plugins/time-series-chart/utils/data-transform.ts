@@ -154,9 +154,16 @@ export function getLineSeries(
     type: 'line',
     name: name,
     data: data,
-    // color: getRandomColor(name),
-    color: selectedSeriesName && selectedSeriesName === name ? 'black' : getRandomColor(name),
+    color: getRandomColor(name),
     sampling: 'lttb',
     progressiveThreshold: OPTIMIZED_MODE_SERIES_LIMIT,
+    lineStyle: {
+      width: selectedSeriesName && selectedSeriesName === name ? 2 : 1,
+    },
+    emphasis: {
+      lineStyle: {
+        width: selectedSeriesName && selectedSeriesName === name ? 2.5 : 1.5,
+      },
+    },
   };
 }

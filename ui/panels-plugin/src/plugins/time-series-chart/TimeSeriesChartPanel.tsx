@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useMemo, useState, MouseEvent } from 'react';
+import { useMemo, useState } from 'react';
 import { PanelProps, useTimeSeriesQueries, useTimeRange } from '@perses-dev/plugin-system';
 import { GridComponentOption } from 'echarts';
 import { Box, Skeleton } from '@mui/material';
@@ -68,13 +68,11 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       legendItems: [],
       rangeMs: timeScale.endMs - timeScale.startMs,
     };
-    // TODO (sjcobb): consolidate with thresholds: Array(xAxisData.length).fill(step.value)
     const xAxisData = [...getXValues(timeScale)];
 
-    const onLegendItemClick = (e: MouseEvent, seriesName: string) => {
-      console.log('onLegendItemClick -> e: ', e);
+    const onLegendItemClick = (seriesName: string) => {
       setSelectedSeriesName((current) => {
-        if (current === null) {
+        if (current === null || current !== seriesName) {
           return seriesName;
         }
         return null;
@@ -98,7 +96,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
             label: timeSeries.name,
             isSelected: false,
             color: getRandomColor(timeSeries.name),
-            onClick: (e) => onLegendItemClick(e, timeSeries.name),
+            onClick: () => onLegendItemClick(timeSeries.name),
           });
         }
       }
@@ -154,15 +152,8 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     setTimeRange({ start: new Date(event.start), end: new Date(event.end) });
   };
 
-  console.log('rendered -> selectedSeriesName: ', selectedSeriesName);
-
   return (
-    <Box
-    // sx={{
-    //   height: contentDimensions.height,
-    //   overflowY: 'scroll',
-    // }}
-    >
+    <>
       <LineChart
         height={
           graphData.legendItems && graphData.legendItems.length > 0
@@ -174,8 +165,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         grid={gridOverrides}
         onDataZoom={handleDataZoom}
       />
-      {/* {show_legend && <ListLegend items={graphData.legendItems} onClick={handleOnLegendClick} />} */}
       {show_legend && graphData.legendItems && <Legend data={graphData.legendItems} />}
-    </Box>
+    </>
   );
 }
