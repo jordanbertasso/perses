@@ -40,6 +40,14 @@ export type EChartsDataFormat = {
   rangeMs?: number;
 };
 
+/**
+ * Supported legend options
+ */
+export interface LegendOptions {
+  show: boolean;
+  position: 'bottom' | 'right';
+}
+
 export interface LegendItem {
   id: string;
   label: string;

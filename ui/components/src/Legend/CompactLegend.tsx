@@ -11,27 +11,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { List } from '@mui/material';
+import { Stack } from '@mui/material';
 import { LegendItem } from '../model';
 import { ListLegendItem } from './ListLegendItem';
 
-interface ListLegendProps {
+interface CompactLegendProps {
   items: LegendItem[];
 }
 
-export function ListLegend({ items }: ListLegendProps) {
+export function CompactLegend({ items }: CompactLegendProps) {
   return (
-    <List
-    // sx={{
-    //   display: 'flex',
-    //   flexWrap: 'wrap',
-    //   alignItem: 'flex-start',
-    //   justifyContent: 'space-around',
-    // }}
+    <Stack
+      direction="row"
+      spacing={2}
+      sx={{ flexWrap: 'wrap' }}
+      // sx={{ flexWrap: 'wrap', gap: 1 }}
+      // sx={{
+      //   display: 'flex',
+      //   flexWrap: 'wrap',
+      //   alignItem: 'flex-start',
+      //   justifyContent: 'space-around',
+      // }}
     >
       {items.map((item) => (
         <ListLegendItem key={item.id} item={item} />
       ))}
-    </List>
+    </Stack>
   );
 }

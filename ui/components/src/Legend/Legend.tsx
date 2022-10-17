@@ -12,21 +12,37 @@
 // limitations under the License.
 
 import { Box } from '@mui/material';
-import { LegendItem } from '../model';
+import { LegendOptions, LegendItem } from '../model';
 import { ListLegend } from './ListLegend';
+import { CompactLegend } from './CompactLegend';
 
 interface LegendProps {
+  width: number;
+  height: number;
   data: LegendItem[];
+  options: LegendOptions;
 }
 
-export function Legend({ data }: LegendProps) {
+export function Legend({ height, options, data }: LegendProps) {
+  if (options.position === 'right') {
+    return (
+      <Box
+        sx={{
+          width: 200,
+          height: height,
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          overflowY: 'scroll',
+        }}
+      >
+        <ListLegend items={data} />
+      </Box>
+    );
+  }
   return (
-    <Box
-      sx={{ height: 50, overflowY: 'scroll' }}
-      // width={contentDimensions.width}
-      // height={contentDimensions.height}
-    >
-      <ListLegend items={data} />
+    <Box sx={{ height: 50, overflowY: 'scroll' }}>
+      <CompactLegend items={data} />
     </Box>
   );
 }

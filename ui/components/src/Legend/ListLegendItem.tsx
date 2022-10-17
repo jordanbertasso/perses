@@ -26,7 +26,7 @@ export const ListLegendItem = React.memo(function ListLegendItem({ item }: ListL
       dense={true}
       sx={{
         display: 'flex',
-        maxWidth: 400,
+        maxWidth: 270,
         padding: 0,
         cursor: 'pointer',
       }}

@@ -32,7 +32,7 @@ export type TimeSeriesChartProps = PanelProps<TimeSeriesChartOptions>;
 
 export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   const {
-    spec: { queries, show_legend, thresholds },
+    spec: { queries, legend, thresholds },
     contentDimensions,
   } = props;
 
@@ -90,7 +90,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         if (selectedSeriesName === null || selectedSeriesName === timeSeries.name) {
           graphData.timeSeries.push(lineSeries);
         }
-        if (show_legend && graphData.legendItems) {
+        if (legend.show && graphData.legendItems) {
           graphData.legendItems.push({
             id: timeSeries.name,
             label: timeSeries.name,
@@ -125,7 +125,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       loading: queriesFinished === 0,
       allQueriesLoaded: queriesFinished === queryResults.length,
     };
-  }, [queryResults, thresholds, selectedSeriesName, show_legend]);
+  }, [queryResults, thresholds, selectedSeriesName, legend]);
 
   if (contentDimensions === undefined) {
     return null;
@@ -144,8 +144,13 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   }
 
   const gridOverrides: GridComponentOption = {
-    bottom: show_legend === true ? 0 : 0,
+    right: legend.show && legend.position === 'right' ? 200 : 20,
   };
+
+  const lineChartHeight =
+    legend.position === 'bottom' && graphData.legendItems && graphData.legendItems.length > 0
+      ? contentDimensions.height - 50
+      : contentDimensions.height;
 
   const handleDataZoom = (event: ZoomEventData) => {
     // TODO: add ECharts transition animation on zoom
@@ -155,17 +160,20 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   return (
     <>
       <LineChart
-        height={
-          graphData.legendItems && graphData.legendItems.length > 0
-            ? contentDimensions.height - 50
-            : contentDimensions.height
-        }
+        height={lineChartHeight}
         data={graphData}
         unit={unit}
         grid={gridOverrides}
         onDataZoom={handleDataZoom}
       />
-      {show_legend && graphData.legendItems && <Legend data={graphData.legendItems} />}
+      {legend.show && graphData.legendItems && (
+        <Legend
+          width={contentDimensions.width}
+          height={contentDimensions.width}
+          options={legend}
+          data={graphData.legendItems}
+        />
+      )}
     </>
   );
 }

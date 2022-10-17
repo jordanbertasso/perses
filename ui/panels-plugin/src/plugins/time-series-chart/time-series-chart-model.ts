@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { UnitOptions } from '@perses-dev/components';
+import { UnitOptions, LegendOptions } from '@perses-dev/components';
 import { TimeSeriesQueryDefinition } from '@perses-dev/core';
 import { ThresholdOptions } from '../../model/thresholds';
 
@@ -20,7 +20,7 @@ import { ThresholdOptions } from '../../model/thresholds';
  */
 export interface TimeSeriesChartOptions {
   queries: TimeSeriesQueryDefinition[];
-  show_legend?: boolean;
+  legend: LegendOptions;
   unit?: UnitOptions;
   thresholds?: ThresholdOptions;
 }
@@ -43,8 +43,10 @@ export function createInitialTimeSeriesChartOptions(): TimeSeriesChartOptions {
         },
       },
     ],
-    // TODO: configurable legend, change from show_legend to legend.show
-    show_legend: true,
+    legend: {
+      show: true,
+      position: 'bottom',
+    },
     unit: {
       kind: 'Decimal',
     },
