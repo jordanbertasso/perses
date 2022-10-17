@@ -41,7 +41,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     decimal_places: 2,
   };
 
-  const [selectedSeriesName, setSelectedSeriesName] = useState<string>();
+  const [selectedSeriesName, setSelectedSeriesName] = useState<string | null>(null);
 
   const suggestedStepMs = useSuggestedStepMs(contentDimensions?.width);
   const queryResults = useTimeSeriesQueries(queries, { suggestedStepMs });
@@ -73,7 +73,12 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
 
     const onLegendItemClick = (e: MouseEvent, seriesName: string) => {
       console.log('onLegendItemClick -> e: ', e);
-      setSelectedSeriesName(seriesName);
+      setSelectedSeriesName((current) => {
+        if (current === null) {
+          return seriesName;
+        }
+        return null;
+      });
     };
 
     let queriesFinished = 0;
@@ -81,11 +86,12 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       // Skip queries that are still loading and don't have data
       if (query.isLoading || query.data === undefined) continue;
 
-      // TODO (sjcobb): change to regular for loop, use index to populate legendItems id
       for (const timeSeries of query.data.series) {
         const yValues = getYValues(timeSeries, timeScale);
-        const lineSeries = getLineSeries(timeSeries.name, yValues, undefined, selectedSeriesName);
-        graphData.timeSeries.push(lineSeries);
+        const lineSeries = getLineSeries(timeSeries.name, yValues, selectedSeriesName);
+        if (selectedSeriesName === null || selectedSeriesName === timeSeries.name) {
+          graphData.timeSeries.push(lineSeries);
+        }
         if (show_legend && graphData.legendItems) {
           graphData.legendItems.push({
             id: timeSeries.name,
@@ -111,7 +117,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         };
         const thresholdName = step.name ?? `Threshold ${index + 1} `;
         const thresholdData = Array(xAxisData.length).fill(step.value);
-        const thresholdLineSeries = getLineSeries(thresholdName, thresholdData, stepOption);
+        const thresholdLineSeries = getLineSeries(thresholdName, thresholdData, selectedSeriesName, stepOption);
         graphData.timeSeries.push(thresholdLineSeries);
       });
     }
@@ -147,6 +153,8 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     // TODO: add ECharts transition animation on zoom
     setTimeRange({ start: new Date(event.start), end: new Date(event.end) });
   };
+
+  console.log('rendered -> selectedSeriesName: ', selectedSeriesName);
 
   return (
     <Box

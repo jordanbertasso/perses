@@ -126,8 +126,8 @@ export function getYValues(series: TimeSeries, timeScale: TimeScale): Array<numb
 export function getLineSeries(
   name: string,
   data: EChartsTimeSeries['data'],
-  threshold?: StepOptions,
-  selectedSeriesName?: string
+  selectedSeriesName: string | null,
+  threshold?: StepOptions
 ): EChartsTimeSeries {
   if (threshold !== undefined) {
     return {
