@@ -11,5 +11,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export * from './ListLegend';
-export * from './ListLegendItem';
+import React from 'react';
+import { Box, BoxProps } from '@mui/material';
+import { combineSx } from '../utils';
+
+export interface LegendColorBadgeProps extends BoxProps<'div'> {
+  color: string;
+}
+
+export const LegendColorBadge = React.memo(function LegendColorBadge({ color, sx, ...others }: LegendColorBadgeProps) {
+  return (
+    <Box
+      {...others}
+      sx={combineSx(
+        {
+          height: 4,
+          width: 16,
+          margin: (theme) => theme.spacing(0.5),
+        },
+        sx
+      )}
+      style={{ ...others.style, backgroundColor: color }}
+    />
+  );
+});

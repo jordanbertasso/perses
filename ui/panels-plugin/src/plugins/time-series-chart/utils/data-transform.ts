@@ -126,6 +126,7 @@ export function getYValues(series: TimeSeries, timeScale: TimeScale): Array<numb
 export function getLineSeries(
   name: string,
   data: EChartsTimeSeries['data'],
+  selectedSeriesName: string | null,
   threshold?: StepOptions
 ): EChartsTimeSeries {
   if (threshold !== undefined) {
@@ -156,5 +157,13 @@ export function getLineSeries(
     color: getRandomColor(name),
     sampling: 'lttb',
     progressiveThreshold: OPTIMIZED_MODE_SERIES_LIMIT,
+    lineStyle: {
+      width: selectedSeriesName && selectedSeriesName === name ? 2 : 1,
+    },
+    emphasis: {
+      lineStyle: {
+        width: selectedSeriesName && selectedSeriesName === name ? 2.5 : 1.5,
+      },
+    },
   };
 }

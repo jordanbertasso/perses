@@ -11,26 +11,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { useMemo, useState } from 'react';
 import { PanelProps, useTimeSeriesQueries, useTimeRange } from '@perses-dev/plugin-system';
-import { useMemo } from 'react';
 import { GridComponentOption } from 'echarts';
 import { Box, Skeleton } from '@mui/material';
-import { LineChart, EChartsDataFormat, ZoomEventData } from '@perses-dev/components';
+import { LineChart, EChartsDataFormat, ZoomEventData, Legend } from '@perses-dev/components';
 import { useSuggestedStepMs } from '../../model/time';
 import { StepOptions, ThresholdColors, ThresholdColorsPalette } from '../../model/thresholds';
 import { TimeSeriesChartOptions } from './time-series-chart-model';
 import { getLineSeries, getCommonTimeScale, getYValues, getXValues } from './utils/data-transform';
+import { getRandomColor } from './utils/palette-gen';
 
 export const EMPTY_GRAPH_DATA = {
   timeSeries: [],
   xAxis: [],
+  legendItems: [],
 };
 
 export type TimeSeriesChartProps = PanelProps<TimeSeriesChartOptions>;
 
 export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   const {
-    spec: { queries, show_legend, thresholds },
+    spec: { queries, legend, thresholds },
     contentDimensions,
   } = props;
 
@@ -38,6 +40,8 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     kind: 'Decimal',
     decimal_places: 2,
   };
+
+  const [selectedSeriesName, setSelectedSeriesName] = useState<string | null>(null);
 
   const suggestedStepMs = useSuggestedStepMs(contentDimensions?.width);
   const queryResults = useTimeSeriesQueries(queries, { suggestedStepMs });
@@ -58,8 +62,22 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       };
     }
 
-    const graphData: EChartsDataFormat = { timeSeries: [], xAxis: [], rangeMs: timeScale.endMs - timeScale.startMs };
+    const graphData: EChartsDataFormat = {
+      timeSeries: [],
+      xAxis: [],
+      legendItems: [],
+      rangeMs: timeScale.endMs - timeScale.startMs,
+    };
     const xAxisData = [...getXValues(timeScale)];
+
+    const onLegendItemClick = (seriesName: string) => {
+      setSelectedSeriesName((current) => {
+        if (current === null || current !== seriesName) {
+          return seriesName;
+        }
+        return null;
+      });
+    };
 
     let queriesFinished = 0;
     for (const query of queryResults) {
@@ -68,8 +86,19 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
 
       for (const timeSeries of query.data.series) {
         const yValues = getYValues(timeSeries, timeScale);
-        const lineSeries = getLineSeries(timeSeries.name, yValues);
-        graphData.timeSeries.push(lineSeries);
+        const lineSeries = getLineSeries(timeSeries.name, yValues, selectedSeriesName);
+        if (selectedSeriesName === null || selectedSeriesName === timeSeries.name) {
+          graphData.timeSeries.push(lineSeries);
+        }
+        if (legend.show && graphData.legendItems) {
+          graphData.legendItems.push({
+            id: timeSeries.name,
+            label: timeSeries.name,
+            isSelected: false,
+            color: getRandomColor(timeSeries.name),
+            onClick: () => onLegendItemClick(timeSeries.name),
+          });
+        }
       }
       queriesFinished++;
     }
@@ -86,7 +115,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         };
         const thresholdName = step.name ?? `Threshold ${index + 1} `;
         const thresholdData = Array(xAxisData.length).fill(step.value);
-        const thresholdLineSeries = getLineSeries(thresholdName, thresholdData, stepOption);
+        const thresholdLineSeries = getLineSeries(thresholdName, thresholdData, selectedSeriesName, stepOption);
         graphData.timeSeries.push(thresholdLineSeries);
       });
     }
@@ -96,7 +125,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       loading: queriesFinished === 0,
       allQueriesLoaded: queriesFinished === queryResults.length,
     };
-  }, [queryResults, thresholds]);
+  }, [queryResults, thresholds, selectedSeriesName, legend]);
 
   if (contentDimensions === undefined) {
     return null;
@@ -114,15 +143,14 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     );
   }
 
-  const legendOverrides = {
-    show: show_legend === true,
-    type: 'scroll',
-    bottom: 0,
+  const gridOverrides: GridComponentOption = {
+    right: legend.show && legend.position === 'right' ? 200 : 20,
   };
 
-  const gridOverrides: GridComponentOption = {
-    bottom: show_legend === true ? 35 : 0,
-  };
+  const lineChartHeight =
+    legend.position === 'bottom' && graphData.legendItems && graphData.legendItems.length > 0
+      ? contentDimensions.height - 50
+      : contentDimensions.height;
 
   const handleDataZoom = (event: ZoomEventData) => {
     // TODO: add ECharts transition animation on zoom
@@ -130,13 +158,22 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   };
 
   return (
-    <LineChart
-      height={contentDimensions.height}
-      data={graphData}
-      unit={unit}
-      legend={legendOverrides}
-      grid={gridOverrides}
-      onDataZoom={handleDataZoom}
-    />
+    <>
+      <LineChart
+        height={lineChartHeight}
+        data={graphData}
+        unit={unit}
+        grid={gridOverrides}
+        onDataZoom={handleDataZoom}
+      />
+      {legend.show && graphData.legendItems && (
+        <Legend
+          width={contentDimensions.width}
+          height={contentDimensions.width}
+          options={legend}
+          data={graphData.legendItems}
+        />
+      )}
+    </>
   );
 }
