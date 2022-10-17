@@ -11,21 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { MouseEventHandler } from 'react';
-import { Box, ListItemText, ListItem, BoxProps } from '@mui/material';
-import { combineSx } from '../utils';
-interface ListLegendItemProps {
-  item: ListLegendItem;
-  // onLegendItemClick: MouseEventHandler<HTMLLIElement>;
-}
+import React from 'react';
+import { Box, ListItemText, ListItem } from '@mui/material';
+import { LegendItem } from '../model';
+import { LegendColorBadge } from './LegendColorBadge';
 
-// https://github.com/sumeete/perses/blob/sjcobb/legend-debug/ui/components/src/ListLegend/ListLegendItem.tsx#L13
-export interface ListLegendItem {
-  id: string;
-  label: string;
-  isSelected: boolean;
-  color: string;
-  onClick: MouseEventHandler<HTMLLIElement>;
+interface ListLegendItemProps {
+  item: LegendItem;
 }
 
 export const ListLegendItem = React.memo(function ListLegendItem({ item }: ListLegendItemProps) {
@@ -47,26 +39,5 @@ export const ListLegendItem = React.memo(function ListLegendItem({ item }: ListL
       </Box>
       <ListItemText primary={item.label}></ListItemText>
     </ListItem>
-  );
-});
-
-export interface LegendColorBadgeProps extends BoxProps<'div'> {
-  color: string;
-}
-
-export const LegendColorBadge = React.memo(function LegendColorBadge({ color, sx, ...others }: LegendColorBadgeProps) {
-  return (
-    <Box
-      {...others}
-      sx={combineSx(
-        {
-          height: 4,
-          width: 16,
-          margin: (theme) => theme.spacing(0.5),
-        },
-        sx
-      )}
-      style={{ ...others.style, backgroundColor: color }}
-    />
   );
 });

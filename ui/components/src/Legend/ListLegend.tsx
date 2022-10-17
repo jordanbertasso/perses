@@ -12,10 +12,11 @@
 // limitations under the License.
 
 import { List } from '@mui/material';
+import { LegendItem } from '../model';
 import { ListLegendItem } from './ListLegendItem';
 
 interface ListLegendProps {
-  items: ListLegendItem[];
+  items: LegendItem[];
 }
 
 export function ListLegend({ items }: ListLegendProps) {

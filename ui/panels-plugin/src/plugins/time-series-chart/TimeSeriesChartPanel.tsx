@@ -15,7 +15,7 @@ import { useMemo, useState, MouseEvent } from 'react';
 import { PanelProps, useTimeSeriesQueries, useTimeRange } from '@perses-dev/plugin-system';
 import { GridComponentOption } from 'echarts';
 import { Box, Skeleton } from '@mui/material';
-import { LineChart, EChartsDataFormat, ZoomEventData, ListLegend } from '@perses-dev/components';
+import { LineChart, EChartsDataFormat, ZoomEventData, Legend } from '@perses-dev/components';
 import { useSuggestedStepMs } from '../../model/time';
 import { StepOptions, ThresholdColors, ThresholdColorsPalette } from '../../model/thresholds';
 import { TimeSeriesChartOptions } from './time-series-chart-model';
@@ -68,6 +68,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       legendItems: [],
       rangeMs: timeScale.endMs - timeScale.startMs,
     };
+    // TODO (sjcobb): consolidate with thresholds: Array(xAxisData.length).fill(step.value)
     const xAxisData = [...getXValues(timeScale)];
 
     const onLegendItemClick = (e: MouseEvent, seriesName: string) => {
@@ -80,6 +81,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       // Skip queries that are still loading and don't have data
       if (query.isLoading || query.data === undefined) continue;
 
+      // TODO (sjcobb): change to regular for loop, use index to populate legendItems id
       for (const timeSeries of query.data.series) {
         const yValues = getYValues(timeSeries, timeScale);
         const lineSeries = getLineSeries(timeSeries.name, yValues, undefined, selectedSeriesName);
@@ -148,15 +150,15 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
 
   return (
     <Box
-      sx={{
-        height: contentDimensions.height,
-        overflowY: 'scroll',
-      }}
+    // sx={{
+    //   height: contentDimensions.height,
+    //   overflowY: 'scroll',
+    // }}
     >
       <LineChart
         height={
           graphData.legendItems && graphData.legendItems.length > 0
-            ? contentDimensions.height - 40
+            ? contentDimensions.height - 50
             : contentDimensions.height
         }
         data={graphData}
@@ -165,7 +167,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         onDataZoom={handleDataZoom}
       />
       {/* {show_legend && <ListLegend items={graphData.legendItems} onClick={handleOnLegendClick} />} */}
-      {show_legend && graphData.legendItems && <ListLegend items={graphData.legendItems} />}
+      {show_legend && graphData.legendItems && <Legend data={graphData.legendItems} />}
     </Box>
   );
 }
