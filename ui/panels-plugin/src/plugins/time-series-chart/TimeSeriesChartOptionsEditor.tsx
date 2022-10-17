@@ -12,7 +12,8 @@
 // limitations under the License.
 
 import { produce } from 'immer';
-import { Stack, Box, Typography } from '@mui/material';
+// import { useImmer } from 'use-immer';
+import { Grid, Stack, Box, Typography, Switch } from '@mui/material';
 import { TimeSeriesQueryDefinition } from '@perses-dev/core';
 import { OptionsEditorProps, TimeSeriesQueryEditor } from '@perses-dev/plugin-system';
 import { TimeSeriesChartOptions } from './time-series-chart-model';
@@ -22,6 +23,10 @@ export type TimeSeriesChartOptionsEditorProps = OptionsEditorProps<TimeSeriesCha
 export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditorProps) {
   const { onChange, value } = props;
   const { queries } = value;
+  // const { queries, legend } = value;
+
+  // // const [legendState, setLegendState] = useImmer(getInitialState(initialVariableDefinition));
+  // const [legendState, setLegendState] = useImmer(legend);
 
   const handleQueryChange = (index: number, queryDef: TimeSeriesQueryDefinition) => {
     onChange(
@@ -30,6 +35,14 @@ export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditor
       })
     );
   };
+
+  function updateLegendShow(show: boolean) {
+    onChange(
+      produce(value, (draft: TimeSeriesChartOptions) => {
+        draft.legend.show = show;
+      })
+    );
+  }
 
   return (
     <Stack spacing={1}>
@@ -42,6 +55,18 @@ export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditor
           <TimeSeriesQueryEditor value={query} onChange={(next) => handleQueryChange(i, next)} />
         </Box>
       ))}
+      <Grid container spacing={1} mb={1}>
+        <Grid item xs={12}>
+          Show Legend
+          <Switch
+            checked={value.legend.show}
+            onChange={(e) => {
+              console.log(e);
+              updateLegendShow(e.target.checked);
+            }}
+          />
+        </Grid>
+      </Grid>
     </Stack>
   );
 }
