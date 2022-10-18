@@ -23,12 +23,12 @@ interface LegendProps {
   options: LegendOptions;
 }
 
-export function Legend({ height, options, data }: LegendProps) {
+export function Legend({ width, height, options, data }: LegendProps) {
   if (options.position === 'right') {
     return (
       <Box
         sx={{
-          width: 200,
+          width: width,
           height: height,
           position: 'absolute',
           top: 0,

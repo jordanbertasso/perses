@@ -143,8 +143,11 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     );
   }
 
+  const legendWidth = legend.position === 'right' ? 200 : contentDimensions.width;
+
+  // override default spacing, see: https://echarts.apache.org/en/option.html#grid.right
   const gridOverrides: GridComponentOption = {
-    right: legend.show && legend.position === 'right' ? 200 : 20,
+    right: legend.show && legend.position === 'right' ? legendWidth : 20,
   };
 
   const lineChartHeight =
@@ -167,12 +170,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         onDataZoom={handleDataZoom}
       />
       {legend.show && graphData.legendItems && (
-        <Legend
-          width={contentDimensions.width}
-          height={contentDimensions.width}
-          options={legend}
-          data={graphData.legendItems}
-        />
+        <Legend width={legendWidth} height={contentDimensions.width} options={legend} data={graphData.legendItems} />
       )}
     </>
   );
