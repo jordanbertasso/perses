@@ -47,6 +47,15 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
 
   const { setTimeRange } = useTimeRange();
 
+  const onLegendItemClick = (seriesName: string) => {
+    setSelectedSeriesName((current) => {
+      if (current === null || current !== seriesName) {
+        return seriesName;
+      }
+      return null;
+    });
+  };
+
   // populate series data based on query results
   const { graphData, loading } = useMemo(() => {
     const timeScale = getCommonTimeScale(queryResults);
@@ -68,15 +77,6 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       rangeMs: timeScale.endMs - timeScale.startMs,
     };
     const xAxisData = [...getXValues(timeScale)];
-
-    const onLegendItemClick = (seriesName: string) => {
-      setSelectedSeriesName((current) => {
-        if (current === null || current !== seriesName) {
-          return seriesName;
-        }
-        return null;
-      });
-    };
 
     let queriesFinished = 0;
     for (const query of queryResults) {
@@ -103,7 +103,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     }
     graphData.xAxis = xAxisData;
 
-    if (thresholds !== undefined && thresholds.steps !== undefined) {
+    if (thresholds && thresholds.steps) {
       const defaultThresholdColor = thresholds.default_color ?? ThresholdColors.RED;
       thresholds.steps.forEach((step: StepOptions, index: number) => {
         const stepPaletteColor = ThresholdColorsPalette[index] ?? defaultThresholdColor;
