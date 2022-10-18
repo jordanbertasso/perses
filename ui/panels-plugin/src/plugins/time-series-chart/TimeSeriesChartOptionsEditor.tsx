@@ -26,7 +26,7 @@ import {
 } from '@mui/material';
 import { TimeSeriesQueryDefinition } from '@perses-dev/core';
 import { OptionsEditorProps, TimeSeriesQueryEditor } from '@perses-dev/plugin-system';
-import { TimeSeriesChartOptions } from './time-series-chart-model';
+import { TimeSeriesChartOptions, DEFAULT_LEGEND } from './time-series-chart-model';
 
 export type TimeSeriesChartOptionsEditorProps = OptionsEditorProps<TimeSeriesChartOptions>;
 
@@ -85,7 +85,7 @@ export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditor
             label="Show"
             control={
               <Switch
-                checked={value.legend.show}
+                checked={value.legend.show ?? DEFAULT_LEGEND.show}
                 onChange={(e) => {
                   updateLegendShow(e.target.checked);
                 }}
@@ -100,7 +100,7 @@ export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditor
               labelId="legend-position-select-label"
               id="legend-position-select"
               label="Position"
-              value={value.legend.position}
+              value={value.legend.position ?? DEFAULT_LEGEND.position}
               onChange={(e) => {
                 updateLegendPosition(e.target.value as LegendPositionOptions['position']);
               }}

@@ -25,6 +25,11 @@ export interface TimeSeriesChartOptions {
   thresholds?: ThresholdOptions;
 }
 
+export const DEFAULT_LEGEND: LegendOptions = {
+  show: true,
+  position: 'bottom',
+};
+
 /**
  * Creates an initial/empty options object for the TimeSeriesChartPanel.
  */
@@ -43,10 +48,7 @@ export function createInitialTimeSeriesChartOptions(): TimeSeriesChartOptions {
         },
       },
     ],
-    legend: {
-      show: true,
-      position: 'bottom',
-    },
+    legend: DEFAULT_LEGEND,
     unit: {
       kind: 'Decimal',
     },

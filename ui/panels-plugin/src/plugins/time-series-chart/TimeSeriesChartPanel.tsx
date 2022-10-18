@@ -12,13 +12,14 @@
 // limitations under the License.
 
 import { useMemo, useState } from 'react';
+import { merge } from 'lodash-es';
 import { PanelProps, useTimeSeriesQueries, useTimeRange } from '@perses-dev/plugin-system';
 import { GridComponentOption } from 'echarts';
 import { Box, Skeleton } from '@mui/material';
 import { LineChart, EChartsDataFormat, ZoomEventData, Legend } from '@perses-dev/components';
 import { useSuggestedStepMs } from '../../model/time';
 import { StepOptions, ThresholdColors, ThresholdColorsPalette } from '../../model/thresholds';
-import { TimeSeriesChartOptions } from './time-series-chart-model';
+import { TimeSeriesChartOptions, DEFAULT_LEGEND } from './time-series-chart-model';
 import { getLineSeries, getCommonTimeScale, getYValues, getXValues, EMPTY_GRAPH_DATA } from './utils/data-transform';
 import { getRandomColor } from './utils/palette-gen';
 
@@ -26,9 +27,11 @@ export type TimeSeriesChartProps = PanelProps<TimeSeriesChartOptions>;
 
 export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   const {
-    spec: { queries, legend, thresholds },
+    spec: { queries, thresholds },
     contentDimensions,
   } = props;
+
+  const legend = merge({}, DEFAULT_LEGEND, props.spec.legend);
 
   const unit = props.spec.unit ?? {
     kind: 'Decimal',
@@ -84,7 +87,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         if (selectedSeriesName === null || selectedSeriesName === timeSeries.name) {
           graphData.timeSeries.push(lineSeries);
         }
-        if (legend && legend.show && graphData.legendItems) {
+        if (legend.show && graphData.legendItems) {
           graphData.legendItems.push({
             id: timeSeries.name,
             label: timeSeries.name,
@@ -108,6 +111,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
           value: step.value,
         };
         const thresholdName = step.name ?? `Threshold ${index + 1} `;
+        // TODO: switch back to markLine once alternate tooltip created
         const thresholdData = Array(xAxisData.length).fill(step.value);
         const thresholdLineSeries = getLineSeries(thresholdName, thresholdData, selectedSeriesName, stepOption);
         graphData.timeSeries.push(thresholdLineSeries);
@@ -138,11 +142,11 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
   }
 
   const gridOverrides: GridComponentOption = {
-    right: legend && legend.show && legend.position === 'right' ? 200 : 20,
+    right: legend.show && legend.position === 'right' ? 200 : 20,
   };
 
   const lineChartHeight =
-    legend && legend.position === 'bottom' && graphData.legendItems && graphData.legendItems.length > 0
+    legend.position === 'bottom' && graphData.legendItems && graphData.legendItems.length > 0
       ? contentDimensions.height - 50
       : contentDimensions.height;
 
@@ -160,7 +164,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         grid={gridOverrides}
         onDataZoom={handleDataZoom}
       />
-      {legend && legend.show && graphData.legendItems && (
+      {legend.show && graphData.legendItems && (
         <Legend
           width={contentDimensions.width}
           height={contentDimensions.width}

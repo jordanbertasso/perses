@@ -27,22 +27,25 @@ const benchmarkDashboard: DashboardResource = {
     duration: '6h',
     variables: [
       {
-        kind: 'TextVariable',
+        kind: 'ListVariable',
         spec: {
           name: 'job',
-          value: 'node',
+          allow_multiple: false,
+          allow_all_value: true,
+          default_value: 'node',
+          plugin: {
+            kind: 'PrometheusLabelValuesVariable',
+            spec: {
+              label_name: 'job',
+            },
+          },
         },
       },
       {
-        kind: 'ListVariable',
+        kind: 'TextVariable',
         spec: {
           name: 'instance',
-          plugin: {
-            kind: 'StaticListVariable',
-            spec: {
-              values: ['demo.do.prometheus.io:3000', 'demo.do.prometheus.io:9100'],
-            },
-          },
+          value: 'demo.do.prometheus.io:9100',
         },
       },
       {

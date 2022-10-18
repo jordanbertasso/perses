@@ -210,8 +210,8 @@ const demoDashboard: DashboardResource = {
                 },
               ],
               legend: {
-                show: true,
-                position: 'bottom',
+                // show: true,
+                // position: 'bottom',
               },
               unit: { kind: 'Bytes' },
             },
