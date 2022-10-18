@@ -13,7 +13,6 @@
 
 import { produce } from 'immer';
 import {
-  Grid,
   Stack,
   Box,
   Typography,
@@ -31,10 +30,10 @@ import { TimeSeriesChartOptions, DEFAULT_LEGEND } from './time-series-chart-mode
 export type TimeSeriesChartOptionsEditorProps = OptionsEditorProps<TimeSeriesChartOptions>;
 
 // TODO: reorg supported options
-const legendPositionValues = ['bottom', 'right'] as const;
+const LEGEND_POSITIONS = ['bottom', 'right'] as const;
 
 type LegendPositionOptions = {
-  position: typeof legendPositionValues[number];
+  position: typeof LEGEND_POSITIONS[number];
 };
 
 export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditorProps) {
@@ -76,44 +75,41 @@ export function TimeSeriesChartOptionsEditor(props: TimeSeriesChartOptionsEditor
           <TimeSeriesQueryEditor value={query} onChange={(next) => handleQueryChange(i, next)} />
         </Box>
       ))}
-      <Grid container spacing={1} mb={1}>
-        <Grid item xs={12}>
-          <Typography variant="overline" component="h3">
-            Legend
-          </Typography>
-          <FormControlLabel
-            label="Show"
-            control={
-              <Switch
-                checked={value.legend.show ?? DEFAULT_LEGEND.show}
-                onChange={(e) => {
-                  updateLegendShow(e.target.checked);
-                }}
-              />
-            }
-          />
-        </Grid>
-        <Grid>
-          <FormControl fullWidth>
-            <InputLabel id="legend-position-select-label">Position</InputLabel>
-            <Select
-              labelId="legend-position-select-label"
-              id="legend-position-select"
-              label="Position"
-              value={value.legend.position ?? DEFAULT_LEGEND.position}
+      <Stack spacing={1}>
+        <Typography variant="overline" component="h3">
+          Legend
+        </Typography>
+        <FormControlLabel
+          label="Show"
+          control={
+            <Switch
+              checked={value.legend.show ?? DEFAULT_LEGEND.show}
               onChange={(e) => {
-                updateLegendPosition(e.target.value as LegendPositionOptions['position']);
+                updateLegendShow(e.target.checked);
               }}
-            >
-              {legendPositionValues.map((v) => (
-                <MenuItem key={v} value={v}>
-                  {v}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
+            />
+          }
+        />
+        <FormControl>
+          <InputLabel id="legend-position-select-label">Position</InputLabel>
+          <Select
+            sx={{ maxWidth: 100 }}
+            labelId="legend-position-select-label"
+            id="legend-position-select"
+            label="Position"
+            value={value.legend.position ?? DEFAULT_LEGEND.position}
+            onChange={(e) => {
+              updateLegendPosition(e.target.value as LegendPositionOptions['position']);
+            }}
+          >
+            {LEGEND_POSITIONS.map((v) => (
+              <MenuItem key={v} value={v}>
+                {v}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Stack>
     </Stack>
   );
 }

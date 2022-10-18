@@ -21,18 +21,7 @@ interface CompactLegendProps {
 
 export function CompactLegend({ items }: CompactLegendProps) {
   return (
-    <Stack
-      direction="row"
-      spacing={2}
-      sx={{ flexWrap: 'wrap' }}
-      // sx={{ flexWrap: 'wrap', gap: 1 }}
-      // sx={{
-      //   display: 'flex',
-      //   flexWrap: 'wrap',
-      //   alignItem: 'flex-start',
-      //   justifyContent: 'space-around',
-      // }}
-    >
+    <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap' }}>
       {items.map((item) => (
         <ListLegendItem key={item.id} item={item} />
       ))}

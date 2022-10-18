@@ -21,14 +21,7 @@ interface ListLegendProps {
 
 export function ListLegend({ items }: ListLegendProps) {
   return (
-    <List
-    // sx={{
-    //   display: 'flex',
-    //   flexWrap: 'wrap',
-    //   alignItem: 'flex-start',
-    //   justifyContent: 'space-around',
-    // }}
-    >
+    <List>
       {items.map((item) => (
         <ListLegendItem key={item.id} item={item} />
       ))}

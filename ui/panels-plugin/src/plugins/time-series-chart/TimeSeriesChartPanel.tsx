@@ -31,6 +31,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     contentDimensions,
   } = props;
 
+  // popuate 'position' and 'show' if undefined
   const legend = merge({}, DEFAULT_LEGEND, props.spec.legend);
 
   const unit = props.spec.unit ?? {
@@ -38,6 +39,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
     decimal_places: 2,
   };
 
+  // TODO: change to array, support multi select on Shift-click
   const [selectedSeriesName, setSelectedSeriesName] = useState<string | null>(null);
 
   const suggestedStepMs = useSuggestedStepMs(contentDimensions?.width);
