@@ -75,7 +75,9 @@ function RenderDashboardList() {
                   <ListItemButton
                     onClick={() => navigate('/projects/' + projectName + '/dashboards/' + dashboard.metadata.name)}
                   >
-                    <ListItemText primary={dashboard.metadata.name} />
+                    <ListItemText
+                      primary={dashboard.spec.display ? dashboard.spec.display.name : dashboard.metadata.name}
+                    />
                   </ListItemButton>
                 </Box>
               );

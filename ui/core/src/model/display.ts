@@ -11,21 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Definition, UnknownSpec } from './definitions';
-import { Display } from './display';
-
-export interface PanelDefinition<PluginSpec = UnknownSpec> extends Definition<PanelSpec<PluginSpec>> {
-  kind: 'Panel';
-}
-
-export interface PanelSpec<PluginSpec> {
-  display: Display;
-  plugin: Definition<PluginSpec>;
-}
-
-/**
- * A reference to a panel defined in the DashboardSpec.
- */
-export interface PanelRef {
-  $ref: `#/spec/panels/${string}`;
+export interface Display {
+  name: string;
+  description?: string;
 }
