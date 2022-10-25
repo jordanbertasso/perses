@@ -25,12 +25,12 @@ interface SeriesInfoProps {
 
 export function SeriesInfo(props: SeriesInfoProps) {
   const { seriesName, y, markerColor, totalSeries, wrapLabels } = props;
-
-  // TODO (sjcobb): regex to remove __name__, improve series labels
   const formattedSeriesLabels = seriesName.replace(/[{}"]/g, '');
+  const seriesNameLabels = formattedSeriesLabels.split(',');
 
   if (totalSeries === 1) {
-    const jsonFormattedSeries = seriesName[0] === '{' ? true : false;
+    const valueLabel = seriesNameLabels[0];
+    seriesNameLabels.shift();
     return (
       <Stack spacing={0.5}>
         <Box
@@ -46,7 +46,7 @@ export function SeriesInfo(props: SeriesInfoProps) {
         >
           <SeriesMarker markerColor={markerColor} />
           <Box component="span">
-            value:
+            {valueLabel}:
             <Box
               component="span"
               sx={(theme) => ({
@@ -69,9 +69,9 @@ export function SeriesInfo(props: SeriesInfoProps) {
             color: theme.palette.common.white,
           })}
         >
-          {formattedSeriesLabels.split(',').map((name) => {
+          {seriesNameLabels.map((name) => {
             if (name) {
-              const [key, value] = jsonFormattedSeries ? name.split(':') : name.split('=');
+              const [key, value] = name.split(':');
               const formattedKey = value !== undefined ? `${key}: ` : key;
               return (
                 <Box key={name} sx={{ display: 'flex', gap: '4px' }}>

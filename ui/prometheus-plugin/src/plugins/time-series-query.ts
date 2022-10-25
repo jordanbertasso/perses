@@ -80,10 +80,13 @@ const getTimeSeriesData: TimeSeriesQueryPlugin<PrometheusTimeSeriesQuerySpec>['g
     series: result.map((value) => {
       const { metric, values } = value;
 
-      // Name the series after the metric labels or if no metric, just use the
-      // overall query
+      // Filter out __name__ and use metric labels for series name or if no metric,
+      // just use the overall query
       let name = Object.entries(metric)
-        .map(([labelName, labelValue]) => `${labelName}="${labelValue}"`)
+        .map(([labelName, labelValue]) => {
+          const formattedLabelName = labelName === '__name__' ? '' : `${labelName}: `;
+          return formattedLabelName + labelValue;
+        })
         .join(', ');
       if (name === '') name = query;
 
