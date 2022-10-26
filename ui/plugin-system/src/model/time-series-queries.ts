@@ -41,7 +41,15 @@ export interface TimeSeriesData {
 export interface TimeSeries {
   name: string;
   values: Iterable<TimeSeriesValueTuple>;
-  format?: string;
+  formattedName?: string;
 }
 
 export type TimeSeriesValueTuple = [timestamp: UnixTimeMs, value: number];
+
+export type SeriesLabels = Record<string, string>;
+
+/* formatter used for series name display in legends and tooltips */
+export function formatSeriesName(inputFormat: string, seriesLabels: SeriesLabels): string {
+  const resolveLabelsRegex = /\{\{\s*(.+?)\s*\}\}/g;
+  return inputFormat.replace(resolveLabelsRegex, (_, g1) => (seriesLabels[g1] ? seriesLabels[g1] : g1));
+}

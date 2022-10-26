@@ -91,17 +91,15 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       if (query.isLoading || query.data === undefined) continue;
 
       for (const timeSeries of query.data.series) {
-        const formattedSeriesName = timeSeries.format ?? timeSeries.name;
+        const formattedSeriesName = timeSeries.formattedName ?? timeSeries.name;
         const yValues = getYValues(timeSeries, timeScale);
         const lineSeries = getLineSeries(timeSeries.name, formattedSeriesName, yValues, selectedSeriesName);
-        lineSeries.name = formattedSeriesName;
         if (selectedSeriesName === null || selectedSeriesName === timeSeries.name) {
           graphData.timeSeries.push(lineSeries);
         }
         if (legend && graphData.legendItems) {
           graphData.legendItems.push({
-            id: timeSeries.name, // TODO: should query generate an id instead of using name here and in getRandomColor?
-            // label: timeSeries.name, // TODO: parse handlebars syntax and replace with label values
+            id: timeSeries.name,
             label: formattedSeriesName,
             isSelected: selectedSeriesName === timeSeries.name,
             color: getRandomColor(timeSeries.name),

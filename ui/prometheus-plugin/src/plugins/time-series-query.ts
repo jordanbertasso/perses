@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { DurationString } from '@perses-dev/core';
-import { TimeSeriesData, TimeSeriesQueryPlugin } from '@perses-dev/plugin-system';
+import { TimeSeriesData, TimeSeriesQueryPlugin, formatSeriesName } from '@perses-dev/plugin-system';
 import { fromUnixTime } from 'date-fns';
 import {
   parseValueTuple,
@@ -88,10 +88,14 @@ const getTimeSeriesData: TimeSeriesQueryPlugin<PrometheusTimeSeriesQuerySpec>['g
         .join(', ');
       if (name === '') name = query;
 
+      // query editor allows you to define optional series_name_format
+      // to customize legend and tooltip display
+      const formattedName = spec.series_name_format ? formatSeriesName(spec.series_name_format, metric) : name;
+
       return {
-        format: spec.series_name_format,
         name,
         values: values.map(parseValueTuple),
+        formattedName,
       };
     }),
   };
