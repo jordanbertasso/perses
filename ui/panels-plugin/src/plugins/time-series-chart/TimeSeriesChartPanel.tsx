@@ -20,7 +20,14 @@ import { LineChart, EChartsDataFormat, ZoomEventData, Legend } from '@perses-dev
 import { useSuggestedStepMs } from '../../model/time';
 import { StepOptions, ThresholdColors, ThresholdColorsPalette } from '../../model/thresholds';
 import { TimeSeriesChartOptions, DEFAULT_LEGEND } from './time-series-chart-model';
-import { getLineSeries, getCommonTimeScale, getYValues, getXValues, EMPTY_GRAPH_DATA } from './utils/data-transform';
+import {
+  getLineSeries,
+  getThresholdSeries,
+  getCommonTimeScale,
+  getYValues,
+  getXValues,
+  EMPTY_GRAPH_DATA,
+} from './utils/data-transform';
 import { getRandomColor } from './utils/palette-gen';
 
 export type TimeSeriesChartProps = PanelProps<TimeSeriesChartOptions>;
@@ -84,15 +91,18 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
       if (query.isLoading || query.data === undefined) continue;
 
       for (const timeSeries of query.data.series) {
+        const formattedSeriesName = timeSeries.format ?? timeSeries.name;
         const yValues = getYValues(timeSeries, timeScale);
-        const lineSeries = getLineSeries(timeSeries.name, yValues, selectedSeriesName);
+        const lineSeries = getLineSeries(timeSeries.name, formattedSeriesName, yValues, selectedSeriesName);
+        lineSeries.name = formattedSeriesName;
         if (selectedSeriesName === null || selectedSeriesName === timeSeries.name) {
           graphData.timeSeries.push(lineSeries);
         }
         if (legend && graphData.legendItems) {
           graphData.legendItems.push({
             id: timeSeries.name, // TODO: should query generate an id instead of using name here and in getRandomColor?
-            label: timeSeries.name,
+            // label: timeSeries.name, // TODO: parse handlebars syntax and replace with label values
+            label: formattedSeriesName,
             isSelected: selectedSeriesName === timeSeries.name,
             color: getRandomColor(timeSeries.name),
             onClick: () => onLegendItemClick(timeSeries.name),
@@ -115,7 +125,7 @@ export function TimeSeriesChartPanel(props: TimeSeriesChartProps) {
         const thresholdName = step.name ?? `Threshold ${index + 1} `;
         // TODO: switch back to markLine once alternate tooltip created
         const thresholdData = Array(xAxisData.length).fill(step.value);
-        const thresholdLineSeries = getLineSeries(thresholdName, thresholdData, selectedSeriesName, stepOption);
+        const thresholdLineSeries = getThresholdSeries(thresholdName, thresholdData, stepOption);
         graphData.timeSeries.push(thresholdLineSeries);
       });
     }

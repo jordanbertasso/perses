@@ -22,7 +22,7 @@ export type PrometheusTimeSeriesQueryEditorProps = OptionsEditorProps<Prometheus
 
 export function PrometheusTimeSeriesQueryEditor(props: PrometheusTimeSeriesQueryEditorProps) {
   const { onChange, value } = props;
-  const { query, datasource } = value;
+  const { query, datasource, series_name_format } = value;
 
   const handleQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(
@@ -47,9 +47,26 @@ export function PrometheusTimeSeriesQueryEditor(props: PrometheusTimeSeriesQuery
     throw new Error('Got unexpected non-Prometheus datasource selector');
   };
 
+  const handleFormatChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(
+      produce(value, (draft) => {
+        draft.series_name_format = e.target.value;
+      })
+    );
+  };
+
+  const defaultSeriesNameFormatter = '{{namespace}} {{pod}} {{container}}';
+
   return (
     <Box>
       <TextField fullWidth label="Query" value={query} onChange={handleQueryChange} margin="dense" />
+      <TextField
+        fullWidth
+        label="Series Name Format"
+        value={series_name_format ?? defaultSeriesNameFormatter}
+        onChange={handleFormatChange}
+        margin="dense"
+      />
       <FormControl margin="dense" fullWidth={false}>
         {/* TODO: How do we ensure unique ID values if there are multiple of these? Can we use React 18 useId and
             maintain 17 compatibility somehow with a polyfill/shim? */}
