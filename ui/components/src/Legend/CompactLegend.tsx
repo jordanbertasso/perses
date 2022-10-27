@@ -32,7 +32,6 @@ export function CompactLegend({ height, items }: CompactLegendProps) {
           item={item}
           sx={{
             width: 'auto',
-            maxWidth: '50%',
             float: 'left',
             paddingRight: 1.5,
           }}

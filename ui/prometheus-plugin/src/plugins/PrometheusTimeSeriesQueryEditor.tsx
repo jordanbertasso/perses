@@ -55,15 +55,13 @@ export function PrometheusTimeSeriesQueryEditor(props: PrometheusTimeSeriesQuery
     );
   };
 
-  const defaultSeriesNameFormatter = '{{namespace}} {{pod}} {{container}}';
-
   return (
     <Box>
       <TextField fullWidth label="Query" value={query} onChange={handleQueryChange} margin="dense" />
       <TextField
         fullWidth
         label="Series Name Format"
-        value={series_name_format ?? defaultSeriesNameFormatter}
+        value={series_name_format ?? ''}
         onChange={handleFormatChange}
         margin="dense"
       />

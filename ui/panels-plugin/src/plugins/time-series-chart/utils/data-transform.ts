@@ -138,7 +138,7 @@ export function getLineSeries(
     type: 'line',
     name: formattedName,
     data: data,
-    color: getRandomColor(name),
+    color: getRandomColor(name), // use full series name as generated color seed (must match param in legendItems)
     sampling: 'lttb',
     progressiveThreshold: OPTIMIZED_MODE_SERIES_LIMIT,
     lineStyle: {
