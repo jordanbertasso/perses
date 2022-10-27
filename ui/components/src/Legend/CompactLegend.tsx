@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Stack } from '@mui/material';
+import { Box } from '@mui/material';
 import { LegendItem } from '../model';
 import { ListLegendItem } from './ListLegendItem';
 
@@ -19,12 +19,23 @@ interface CompactLegendProps {
   items: LegendItem[];
 }
 
+/**
+ * CompactLegend is default and used when legend items need to show side by side
+ */
 export function CompactLegend({ items }: CompactLegendProps) {
   return (
-    <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap' }}>
+    <Box>
       {items.map((item) => (
-        <ListLegendItem key={item.id} item={item} />
+        <ListLegendItem
+          key={item.id}
+          item={item}
+          sx={{
+            float: 'left',
+            width: 'auto',
+            paddingRight: 1.5,
+          }}
+        />
       ))}
-    </Stack>
+    </Box>
   );
 }
