@@ -16,21 +16,23 @@ import { LegendItem } from '../model';
 import { ListLegendItem } from './ListLegendItem';
 
 interface CompactLegendProps {
+  height: number;
   items: LegendItem[];
 }
 
 /**
  * CompactLegend is default and used when legend items need to show side by side
  */
-export function CompactLegend({ items }: CompactLegendProps) {
+export function CompactLegend({ height, items }: CompactLegendProps) {
   return (
-    <Box>
+    <Box sx={{ paddingTop: 1, height: { height }, overflowY: 'scroll' }}>
       {items.map((item) => (
         <ListLegendItem
           key={item.id}
           item={item}
           sx={{
             float: 'left',
+            maxWidth: '50%',
             width: 'auto',
             paddingRight: 1.5,
           }}
