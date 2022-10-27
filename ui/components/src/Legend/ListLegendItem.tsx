@@ -28,7 +28,6 @@ export const ListLegendItem = React.memo(function ListLegendItem({ item, sx, ...
       {...others}
       sx={combineSx(
         {
-          display: 'flex',
           padding: 0,
           cursor: 'pointer',
         },

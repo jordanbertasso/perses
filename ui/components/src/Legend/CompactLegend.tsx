@@ -25,15 +25,15 @@ interface CompactLegendProps {
  */
 export function CompactLegend({ height, items }: CompactLegendProps) {
   return (
-    <Box sx={{ paddingTop: 1, height: { height }, overflowY: 'scroll' }}>
+    <Box sx={{ width: '100%', height, paddingTop: 1, overflowY: 'scroll' }}>
       {items.map((item) => (
         <ListLegendItem
           key={item.id}
           item={item}
           sx={{
-            float: 'left',
-            maxWidth: '50%',
             width: 'auto',
+            maxWidth: '50%',
+            float: 'left',
             paddingRight: 1.5,
           }}
         />

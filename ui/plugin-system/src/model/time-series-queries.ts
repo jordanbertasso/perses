@@ -51,5 +51,5 @@ export type SeriesLabels = Record<string, string>;
 /* formatter used for series name display in legends and tooltips */
 export function formatSeriesName(inputFormat: string, seriesLabels: SeriesLabels): string {
   const resolveLabelsRegex = /\{\{\s*(.+?)\s*\}\}/g;
-  return inputFormat.replace(resolveLabelsRegex, (_, g1) => (seriesLabels[g1] ? seriesLabels[g1] : g1));
+  return inputFormat.replace(resolveLabelsRegex, (_, g) => (seriesLabels[g] ? seriesLabels[g] : g));
 }

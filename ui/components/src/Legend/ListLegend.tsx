@@ -23,6 +23,7 @@ interface ListLegendProps {
  * ListLegend is used when legend.position is 'right' since legend items are stacked
  */
 export function ListLegend({ items }: ListLegendProps) {
+  // show full labels on hover when there are many total series
   const truncateLabels = items.length > 5;
   return (
     <List>
