@@ -37,6 +37,8 @@ export function ListLegend({ items }: ListLegendProps) {
             wordBreak: 'break-word',
             overflow: truncateLabels ? 'hidden' : 'visible',
             whiteSpace: truncateLabels ? 'nowrap' : 'normal',
+            // this allow you to see the full label on hover since labels that do not fit
+            // on one line are truncated when there are more than 5 series
             '&:hover': {
               overflow: 'visible',
               whiteSpace: 'normal',

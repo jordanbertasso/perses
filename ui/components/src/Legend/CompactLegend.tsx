@@ -22,6 +22,7 @@ interface CompactLegendProps {
 
 /**
  * CompactLegend is default and used when legend items need to show side by side
+ * which corresponds to when legend.position is `bottom`
  */
 export function CompactLegend({ height, items }: CompactLegendProps) {
   return (
