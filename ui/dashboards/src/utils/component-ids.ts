@@ -11,13 +11,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import type { Config } from '@jest/types';
-import shared from '../jest.shared';
+import { useRef } from 'react';
 
-const jestConfig: Config.InitialOptions = {
-  ...shared,
+declare global {
+  // eslint-disable-next-line no-var
+  var useIdValue: number;
+}
 
-  setupFilesAfterEnv: [...(shared.setupFilesAfterEnv ?? []), '<rootDir>/src/test/setup-tests.ts'],
-};
+if (globalThis.useIdValue === undefined) {
+  globalThis.useIdValue = 0;
+}
 
-export default jestConfig;
+/**
+ * Generates a unique (stable) ID for a component. Should be replaced with React.useId once we support only React 18.
+ */
+export function useId(prefix: string) {
+  const id = useRef<string | undefined>(undefined);
+  if (id.current === undefined) {
+    id.current = `${prefix}-${globalThis.useIdValue++}`;
+  }
+  return id.current;
+}

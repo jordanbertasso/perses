@@ -25,6 +25,7 @@ import (
 )
 
 type TimeSeriesSpec struct {
+	// TODO: show_legend needs to be removed in favor of new spec
 	ShowLegend bool     `json:"show_legend" yaml:"show_legend"`
 	Lines      []string `json:"lines" yaml:"lines"`
 }
@@ -232,6 +233,8 @@ func TestMarshalDashboard(t *testing.T) {
         "kind": "ListVariable",
         "spec": {
           "name": "labelName",
+          "allow_all_value": false,
+          "allow_multiple": false,
           "plugin": {
             "kind": "PrometheusLabelNamesVariable",
             "spec": {
@@ -246,6 +249,8 @@ func TestMarshalDashboard(t *testing.T) {
         "kind": "ListVariable",
         "spec": {
           "name": "labelValue",
+          "allow_all_value": false,
+          "allow_multiple": false,
           "plugin": {
             "kind": "PrometheusLabelValuesVariable",
             "spec": {

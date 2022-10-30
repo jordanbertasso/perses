@@ -11,13 +11,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import type { Config } from '@jest/types';
-import shared from '../jest.shared';
+package configendpoint
 
-const jestConfig: Config.InitialOptions = {
-  ...shared,
+import (
+	"net/http"
 
-  setupFilesAfterEnv: [...(shared.setupFilesAfterEnv ?? []), '<rootDir>/src/test/setup-tests.ts'],
-};
+	"github.com/labstack/echo/v4"
+	"github.com/perses/perses/internal/api/config"
+)
 
-export default jestConfig;
+type Endpoint struct {
+	cfg config.Config
+}
+
+func New(cfg config.Config) *Endpoint {
+	return &Endpoint{
+		cfg: cfg,
+	}
+}
+
+func (e *Endpoint) RegisterRoutes(g *echo.Group) {
+	g.GET("/config", e.getConfig)
+}
+
+func (e *Endpoint) getConfig(ctx echo.Context) error {
+	return ctx.JSON(http.StatusOK, e.cfg)
+}

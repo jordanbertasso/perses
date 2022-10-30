@@ -11,13 +11,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import type { Config } from '@jest/types';
-import shared from '../jest.shared';
+import { DurationString } from '@perses-dev/core';
+import { PrometheusDatasourceSelector, TemplateString } from '../../model';
 
-const jestConfig: Config.InitialOptions = {
-  ...shared,
-
-  setupFilesAfterEnv: [...(shared.setupFilesAfterEnv ?? []), '<rootDir>/src/test/setup-tests.ts'],
-};
-
-export default jestConfig;
+/**
+ * The spec/options for the PrometheusTimeSeriesQuery plugin.
+ */
+export interface PrometheusTimeSeriesQuerySpec {
+  query: TemplateString;
+  series_name_format?: string;
+  min_step?: DurationString;
+  resolution?: number;
+  datasource?: PrometheusDatasourceSelector;
+}

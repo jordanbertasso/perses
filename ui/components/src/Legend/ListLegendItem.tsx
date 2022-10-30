@@ -24,7 +24,6 @@ interface ListLegendItemProps extends ListItemProps {
 export const ListLegendItem = React.memo(function ListLegendItem({ item, sx, ...others }: ListLegendItemProps) {
   return (
     <ListItem
-      dense={true}
       {...others}
       sx={combineSx(
         {
@@ -33,6 +32,8 @@ export const ListLegendItem = React.memo(function ListLegendItem({ item, sx, ...
         },
         sx
       )}
+      dense={true}
+      data-testid={`legend-item-${item.color}`}
       key={item.id}
       onClick={item.onClick}
       selected={item.isSelected}
