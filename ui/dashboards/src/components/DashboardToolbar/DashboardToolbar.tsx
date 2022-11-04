@@ -24,13 +24,20 @@ export interface DashboardToolbarProps {
   dashboardName: string;
   dashboardTitleComponent?: JSX.Element;
   initialVariableIsSticky?: boolean;
+  isReadonly: boolean;
   onEditButtonClick: () => void;
   onCancelButtonClick: () => void;
 }
 
 export const DashboardToolbar = (props: DashboardToolbarProps) => {
-  const { dashboardName, dashboardTitleComponent, initialVariableIsSticky, onEditButtonClick, onCancelButtonClick } =
-    props;
+  const {
+    dashboardName,
+    dashboardTitleComponent,
+    initialVariableIsSticky,
+    isReadonly,
+    onEditButtonClick,
+    onCancelButtonClick,
+  } = props;
 
   const { isEditMode, setEditMode } = useEditMode();
   const { openAddPanelGroup, openAddPanel } = useDashboardActions();
@@ -90,7 +97,7 @@ export const DashboardToolbar = (props: DashboardToolbarProps) => {
             {dashboardTitle}
             <Stack direction="row" spacing={2} sx={{ marginLeft: 'auto' }}>
               <TimeRangeControls />
-              {isLaptopSize && (
+              {isLaptopSize && !isReadonly && (
                 <Button
                   variant="outlined"
                   startIcon={<PencilIcon />}

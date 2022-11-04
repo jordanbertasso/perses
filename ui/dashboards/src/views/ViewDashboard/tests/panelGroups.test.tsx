@@ -23,7 +23,7 @@ describe('Panel Groups', () => {
       <TimeRangeProvider timeRange={{ pastDuration: '30m' }}>
         <TemplateVariableProvider>
           <DashboardProvider initialState={{ dashboardResource: getTestDashboard(), isEditMode: true }}>
-            <DashboardApp dashboardResource={getTestDashboard()} />
+            <DashboardApp dashboardResource={getTestDashboard()} isReadonly={false} />
           </DashboardProvider>
         </TemplateVariableProvider>
       </TimeRangeProvider>
