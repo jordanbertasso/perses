@@ -27,7 +27,7 @@ interface TooltipProps {
   wrapLabels?: boolean;
 }
 
-const Tooltip = React.memo(function Tooltip({ chartRef, chartData, wrapLabels, pinTooltip }: TooltipProps) {
+const TimeSeriesTooltip = React.memo(function Tooltip({ chartRef, chartData, wrapLabels, pinTooltip }: TooltipProps) {
   const [pinnedPos, setPinnedPos] = useState<CursorCoordinates | null>(null);
   const mousePos = useMousePosition();
 
@@ -82,4 +82,4 @@ const Tooltip = React.memo(function Tooltip({ chartRef, chartData, wrapLabels, p
   );
 });
 
-export { Tooltip };
+export { TimeSeriesTooltip };

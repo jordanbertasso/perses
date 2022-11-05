@@ -40,7 +40,7 @@ import { EChart, OnEventsType } from '../EChart';
 import { PROGRESSIVE_MODE_SERIES_LIMIT, EChartsDataFormat } from '../model/graph';
 import { formatValue, UnitOptions } from '../model/units';
 import { useChartsTheme } from '../context/ChartsThemeProvider';
-import { Tooltip } from '../Tooltip/Tooltip';
+import { TimeSeriesTooltip } from '../TimeSeriesTooltip';
 import { enableDataZoom, restoreChart, getDateRange, getFormattedDate, ZoomEventData } from './utils';
 
 use([
@@ -209,7 +209,7 @@ export function LineChart({ height, data, unit, grid, legend, visualMap, onDataZ
       onMouseEnter={handleOnMouseEnter}
     >
       {showTooltip === true && (
-        <Tooltip chartRef={chartRef} chartData={data} wrapLabels={true} pinTooltip={pinTooltip}></Tooltip>
+        <TimeSeriesTooltip chartRef={chartRef} chartData={data} wrapLabels={true} pinTooltip={pinTooltip} />
       )}
 
       <EChart
