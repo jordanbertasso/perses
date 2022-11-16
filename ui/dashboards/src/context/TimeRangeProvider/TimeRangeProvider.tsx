@@ -11,9 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useMemo } from 'react';
-import { TimeRangeValue } from '@perses-dev/core';
-import { TimeRangeContext, useTimeRangeContext } from '@perses-dev/plugin-system';
+import React, { useMemo, useState } from 'react';
+import { isRelativeTimeRange, TimeRangeValue } from '@perses-dev/core';
+import { TimeRange, TimeRangeContext, useTimeRangeContext } from '@perses-dev/plugin-system';
 import { useSetTimeRangeParams } from './query-params';
 
 export interface TimeRangeProviderProps {
@@ -28,15 +28,27 @@ export interface TimeRangeProviderProps {
 export function TimeRangeProvider(props: TimeRangeProviderProps) {
   const { initialTimeRange, enabledURLParams, children } = props;
 
-  const { timeRange, setTimeRange } = useSetTimeRangeParams(initialTimeRange, enabledURLParams);
+  const { timeRange: timeRangeParams, setTimeRange: setTimeRangeParams } = useSetTimeRangeParams(
+    initialTimeRange,
+    enabledURLParams
+  );
 
-  const ctx = useMemo(
-    () => ({
+  const [timeRange, setTimeRangeState] = useState(timeRangeParams);
+
+  const ctx = useMemo(() => {
+    const setTimeRange: TimeRange['setTimeRange'] = (timeRange) => {
+      if (isRelativeTimeRange(timeRange) && timeRange.end) {
+        setTimeRangeParams({ ...timeRange, end: undefined });
+      } else {
+        setTimeRangeParams(timeRange);
+      }
+      setTimeRangeState(timeRange);
+    };
+    return {
       timeRange,
       setTimeRange,
-    }),
-    [timeRange, setTimeRange]
-  );
+    };
+  }, [timeRange, setTimeRangeState, setTimeRangeParams]);
 
   return <TimeRangeContext.Provider value={ctx}>{children}</TimeRangeContext.Provider>;
 }
